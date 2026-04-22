@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swaft Browser</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;background:#dee1e6;overflow:hidden;height:100vh;width:100vw}
+        :root{--chrome-bg:#dee1e6;--chrome-tab-active:#fff;--chrome-tab-inactive:#dee1e6;--chrome-toolbar:#fff;--chrome-border:#c6c6c6;--chrome-text:#3c4043;--chrome-blue:#1a73e8;--chrome-hover:rgba(60,64,67,0.08)}
+        body[data-theme="dark"]{--chrome-bg:#202124;--chrome-toolbar:#35363a;--chrome-tab-active:#202124;--chrome-tab-inactive:#35363a;--chrome-text:#e8eaed;--chrome-border:#5f6368;--chrome-hover:rgba(255,255,255,0.1)}
+        .chrome-tab-bar{display:flex;align-items:flex-end;background:var(--chrome-bg);padding:8px 8px 0;gap:4px;border-bottom:1px solid var(--chrome-border);height:44px}
+        .chrome-tabs{display:flex;flex:1;gap:4px}
+        .chrome-tab{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--chrome-tab-inactive);border-radius:8px 8px 0 0;min-width:140px;max-width:240px;cursor:pointer;transition:background 0.2s;font-size:12px;height:36px}
+        .chrome-tab:hover{background:rgba(255,255,255,0.5)}
+        .chrome-tab.active{background:var(--chrome-tab-active);box-shadow:0 -1px 0 rgba(0,0,0,0.05)}
+        .tab-favicon{font-size:14px;width:16px;height:16px;display:flex;align-items:center;justify-content:center}
+        .tab-title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--chrome-text)}
+        .tab-close{width:16px;height:16px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:14px;opacity:0;transition:opacity 0.2s;color:var(--chrome-text)}
+        .chrome-tab:hover .tab-close,.chrome-tab.active .tab-close{opacity:1}
+        .tab-close:hover{background:var(--chrome-hover)}
+        .new-tab-btn{width:28px;height:28px;border:none;background:transparent;color:var(--chrome-text);font-size:18px;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+        .new-tab-btn:hover{background:var(--chrome-hover)}
+        .chrome-toolbar{display:flex;align-items:center;gap:8px;padding:6px 12px;background:var(--chrome-toolbar);border-bottom:1px solid var(--chrome-border);height:44px}
+        .nav-buttons{display:flex;gap:4px}
+        .nav-btn-chrome{width:32px;height:32px;border:none;background:transparent;color:var(--chrome-text);font-size:16px;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+        .nav-btn-chrome:hover{background:var(--chrome-hover)}
+        .omnibox-container{flex:1;max-width:720px}
+        .omnibox{display:flex;align-items:center;gap:8px;background:#f1f3f4;border-radius:20px;padding:8px 16px;transition:all 0.2s;border:2px solid transparent}
+        .omnibox:focus-within{background:#fff;border-color:var(--chrome-blue);box-shadow:0 1px 6px rgba(26,115,232,0.2)}
+        .omni-icon{font-size:14px;color:#34a853}
+        #omnibox-input{flex:1;border:none;background:transparent;color:var(--chrome-text);font-size:14px;outline:none;font-family:inherit}
+        #omnibox-input::placeholder{color:#5f6368}
+        .toolbar-actions{display:flex;gap:4px;margin-left:auto}
+        .tool-btn{width:36px;height:36px;border:none;background:transparent;color:var(--chrome-text);cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;transition:background 0.2s}
+        .tool-btn:hover{background:var(--chrome-hover)}
+        .bookmarks-bar{display:flex;align-items:center;gap:4px;padding:4px 12px;background:var(--chrome-toolbar);border-bottom:1px solid var(--chrome-border);height:34px}
+        .bookmark-item{display:flex;align-items:center;gap:6px;padding:4px 10px;border:none;background:transparent;color:var(--chrome-text);font-size:12px;cursor:pointer;border-radius:4px;transition:background 0.2s;white-space:nowrap}
+        .bookmark-item:hover{background:var(--chrome-hover)}
+        .bm-favicon{width:16px;height:16px}
+        .chrome-content{flex:1;overflow:auto;background:var(--chrome-tab-active);position:relative}
+        .content-page{display:none;height:100%;overflow:auto}
+        .content-page.active{display:block}
+        #browser{display:flex;flex-direction:column;height:100vh}
+        .newtab-container{display:flex;flex-direction:column;align-items:center;padding-top:120px;min-height:100%}
+        .browser-logo{margin-bottom:40px}
+        .logo-text{font-size:72px;font-weight:500;letter-spacing:-4px;font-family:'Segoe UI',sans-serif}
+        .logo-s{color:#4285f4}.logo-w{color:#ea4335}.logo-a{color:#fbbc05}.logo-f{color:#4285f4}.logo-t{color:#34a853}
+        .google-search-box{width:100%;max-width:584px;margin-bottom:30px}
+        .search-inner{display:flex;align-items:center;gap:12px;background:var(--chrome-toolbar);border:1px solid var(--chrome-border);border-radius:24px;padding:12px 16px;box-shadow:0 1px 6px rgba(32,33,36,0.1);transition:all 0.2s}
+        .search-inner:hover,.search-inner:focus-within{box-shadow:0 2px 8px rgba(32,33,36,0.15)}
+        .search-icon-google{font-size:16px;color:#5f6368}
+        #google-search{flex:1;border:none;background:transparent;color:var(--chrome-text);font-size:16px;outline:none}
+        #google-search::placeholder{color:#5f6368}
+        .shortcuts-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:560px;padding:0 16px}
+        .shortcut-tile{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 8px;border:none;background:transparent;cursor:pointer;border-radius:8px;transition:background 0.2s}
+        .shortcut-tile:hover{background:var(--chrome-hover)}
+        .shortcut-icon{width:48px;height:48px;border-radius:50%;background:#f1f3f4;display:flex;align-items:center;justify-content:center;overflow:hidden}
+        .shortcut-icon img{width:24px;height:24px}
+        .youtube-bg{background:#ff0000}.youtube-bg img{filter:brightness(0) invert(1)}
+        .github-bg{background:#24292e}.github-bg img{filter:brightness(0) invert(1)}
+        .reddit-bg{background:#ff4500}.discord-bg{background:#5865f2}.netflix-bg{background:#e50914}
+        .shortcut-name{font-size:12px;color:var(--chrome-text)}
+        #proxy-page{position:relative}
+        #proxy-frame{width:100%;height:100%;border:none;background:#fff}
+        .proxy-loading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:none;flex-direction:column;align-items:center;gap:16px}
+        .loading-spinner{width:40px;height:40px;border:3px solid var(--chrome-border);border-top-color:var(--chrome-blue);border-radius:50%;animation:spin 1s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .chrome-clone-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:90%;max-width:1200px;height:80%;background:var(--chrome-bg);border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,0.3);display:none;flex-direction:column;z-index:9999}
+        .clone-header{display:flex;align-items:center;padding:8px 12px 0;background:var(--chrome-bg);border-radius:8px 8px 0 0}
+        .clone-tabs{display:flex;flex:1}
+        .clone-tab{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--chrome-tab-inactive);border-radius:8px 8px 0 0;cursor:pointer}
+        .clone-tab.active{background:var(--chrome-toolbar)}
+        .clone-favicon{width:16px;height:16px}
+        .clone-title{font-size:12px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--chrome-text)}
+        .clone-controls{display:flex;gap:4px}
+        .clone-controls button{width:28px;height:28px;border:none;background:transparent;color:var(--chrome-text);cursor:pointer;border-radius:4px;font-size:14px}
+        .clone-controls button:hover{background:var(--chrome-hover)}
+        .clone-close-win:hover{background:#e81123!important;color:#fff}
+        .clone-toolbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--chrome-toolbar);border-bottom:1px solid var(--chrome-border)}
+        .clone-nav{width:28px;height:28px;border:none;background:transparent;color:var(--chrome-text);cursor:pointer;border-radius:50%;font-size:14px}
+        .clone-nav:hover{background:var(--chrome-hover)}
+        .clone-omnibox{flex:1;display:flex;align-items:center;gap:8px;background:#f1f3f4;border-radius:16px;padding:6px 12px}
+        .clone-secure{font-size:12px}
+        .clone-url{flex:1;border:none;background:transparent;color:var(--chrome-text);font-size:13px;outline:none}
+        .clone-menu{width:28px;height:28px;border:none;background:transparent;color:var(--chrome-text);cursor:pointer;border-radius:50%;font-size:16px}
+        .clone-frame{flex:1;border:none;border-radius:0 0 8px 8px;background:#fff}
+        .apps-container-chrome{padding:24px;max-width:900px;margin:0 auto}
+        .apps-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+        .apps-header h2{font-size:24px;font-weight:500;color:var(--chrome-text)}
+        .apps-filter{display:flex;gap:8px}
+        .filter-chip{padding:8px 16px;border:1px solid var(--chrome-border);background:transparent;color:var(--chrome-text);border-radius:20px;cursor:pointer;font-size:14px;transition:all 0.2s}
+        .filter-chip:hover{background:var(--chrome-hover)}
+        .filter-chip.active{background:var(--chrome-blue);color:#fff;border-color:var(--chrome-blue)}
+        .apps-grid-chrome{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}
+        .app-card-chrome{display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px;background:var(--chrome-toolbar);border:1px solid var(--chrome-border);border-radius:12px;cursor:pointer;transition:all 0.2s}
+        .app-card-chrome:hover{box-shadow:0 2px 8px rgba(0,0,0,0.1);transform:translateY(-2px)}
+        .app-icon-chrome{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,var(--chrome-blue),#34a853);display:flex;align-items:center;justify-content:center;font-size:32px}
+        .app-name-chrome{font-size:14px;font-weight:500;color:var(--chrome-text)}
+        .settings-chrome{display:flex;height:100%;max-width:1000px;margin:0 auto}
+        .settings-sidebar{width:260px;padding:24px;border-right:1px solid var(--chrome-border)}
+        .settings-sidebar h3{font-size:20px;font-weight:500;margin-bottom:16px;padding:0 12px;color:var(--chrome-text)}
+        .settings-nav{display:flex;flex-direction:column;gap:4px}
+        .settings-nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border:none;background:transparent;color:var(--chrome-text);font-size:14px;cursor:pointer;border-radius:4px;text-align:left;transition:background 0.2s}
+        .settings-nav-item:hover{background:var(--chrome-hover)}
+        .settings-nav-item.active{background:var(--chrome-hover);font-weight:500}
+        .nav-icon{font-size:18px}
+        .settings-content{flex:1;padding:24px;overflow-y:auto}
+        .settings-section{display:none;max-width:600px}
+        .settings-section.active{display:block}
+        .settings-section h4{font-size:20px;font-weight:500;margin-bottom:24px;color:var(--chrome-text)}
+        .setting-card{background:var(--chrome-toolbar);border:1px solid var(--chrome-border);border-radius:8px;padding:16px;margin-bottom:16px}
+        .setting-card label{display:block;font-size:14px;font-weight:500;margin-bottom:8px;color:var(--chrome-text)}
+        .setting-desc{font-size:12px;color:#5f6368;margin-bottom:12px}
+        .theme-options{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+        .theme-option{display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px;border:2px solid transparent;background:transparent;border-radius:8px;cursor:pointer;transition:all 0.2s}
+        .theme-option:hover{background:var(--chrome-hover)}
+        .theme-option.active{border-color:var(--chrome-blue)}
+        .theme-preview{width:56px;height:40px;border-radius:4px;border:1px solid var(--chrome-border)}
+        .chrome-preview{background:linear-gradient(to bottom,#dee1e6 30%,#fff 30%)}
+        .dark-preview{background:linear-gradient(to bottom,#202124 30%,#35363a 30%)}
+        .light-preview{background:linear-gradient(to bottom,#fff 30%,#f1f3f4 30%)}
+        .midnight-preview{background:linear-gradient(to bottom,#0f1419 30%,#161b22 30%)}
+        .theme-option span{font-size:12px;color:var(--chrome-text)}
+        .toggle-switch{position:relative;display:inline-block;width:44px;height:24px}
+        .toggle-switch input{opacity:0;width:0;height:0}
+        .toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:24px;transition:0.2s}
+        .toggle-slider:before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:0.2s}
+        .toggle-switch input:checked+.toggle-slider{background:var(--chrome-blue)}
+        .toggle-switch input:checked+.toggle-slider:before{transform:translateX(20px)}
+        .cloak-options{display:flex;flex-direction:column;gap:8px}
+        .cloak-option{display:flex;align-items:center;gap:12px;padding:10px;border-radius:4px;cursor:pointer;transition:background 0.2s}
+        .cloak-option:hover{background:var(--chrome-hover)}
+        .cloak-option input[type="radio"]{width:18px;height:18px}
+        .cloak-icon{width:20px;height:20px}
+        .setting-input,.setting-select{width:100%;padding:10px 12px;border:1px solid var(--chrome-border);border-radius:4px;background:var(--chrome-toolbar);color:var(--chrome-text);font-size:14px;font-family:inherit}
+        .setting-input:focus,.setting-select:focus{outline:none;border-color:var(--chrome-blue)}
+        .input-help{font-size:12px;color:#5f6368;margin-top:6px}
+        .about-card{text-align:center;padding:40px}
+        .about-logo{font-size:64px;margin-bottom:16px}
+        .about-card h5{font-size:24px;font-weight:500;margin-bottom:8px;color:var(--chrome-text)}
+        .about-desc{color:#5f6368;margin-bottom:24px}
+        .about-links{display:flex;gap:16px;justify-content:center}
+        .about-link{color:var(--chrome-blue);text-decoration:none;font-size:14px}
+        .about-link:hover{text-decoration:underline}
+        #toast-container{position:fixed;bottom:24px;right:24px;z-index:10000;display:flex;flex-direction:column;gap:8px}
+        .toast{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--chrome-toolbar);border:1px solid var(--chrome-border);border-radius:4px;box-shadow:0 4px 12px rgba(0,0,0,0.15);animation:slideIn 0.3s ease;font-size:13px;color:var(--chrome-text)}
+        @keyframes slideIn{from{opacity:0;transform:translateX(100px)}to{opacity:1;transform:translateX(0)}}
+        .hidden{display:none!important}
+        @media(max-width:768px){.chrome-tab{min-width:100px;max-width:160px}.bookmarks-bar{overflow-x:auto}.shortcuts-grid{grid-template-columns:repeat(2,1fr)}.settings-chrome{flex-direction:column}.settings-sidebar{width:100%;border-right:none;border-bottom:1px solid var(--chrome-border)}.theme-options{grid-template-columns:repeat(2,1fr)}}
+    </style>
+</head>
+<body data-theme="chrome">
+    <div id="browser">
+        <div class="chrome-tab-bar">
+            <div class="chrome-tabs">
+                <div class="chrome-tab active" data-tab="main"><span class="tab-favicon">⚡</span><span class="tab-title">Swaft Browser</span><span class="tab-close">×</span></div>
+                <div class="chrome-tab" data-tab="proxy" style="display:none"><span class="tab-favicon">🌐</span><span class="tab-title">New Tab</span><span class="tab-close">×</span></div>
+            </div>
+            <button class="new-tab-btn" id="new-tab-btn" title="New Tab">+</button>
+        </div>
+        <div class="chrome-toolbar">
+            <div class="nav-buttons">
+                <button class="nav-btn-chrome" id="back-btn" title="Back">←</button>
+                <button class="nav-btn-chrome" id="forward-btn" title="Forward">→</button>
+                <button class="nav-btn-chrome" id="refresh-btn" title="Reload">↻</button>
+                <button class="nav-btn-chrome" id="home-btn" title="Home">⌂</button>
+            </div>
+            <div class="omnibox-container">
+                <div class="omnibox"><span class="omni-icon" id="site-icon">🔍</span><input type="text" id="omnibox-input" placeholder="Search Google or type a URL" autocomplete="off"></div>
+            </div>
+            <div class="toolbar-actions"><button class="tool-btn" id="apps-btn" title="Apps">🧩</button><button class="tool-btn" id="settings-btn" title="Settings">⚙️</button><button class="tool-btn menu-btn" id="menu-btn" title="Menu">⋮</button></div>
+        </div>
+        <div class="bookmarks-bar">
+            <button class="bookmark-item" data-url="https://google.com"><img src="https://www.google.com/favicon.ico" class="bm-favicon"><span>Google</span></button>
+            <button class="bookmark-item" data-url="https://youtube.com"><img src="https://www.youtube.com/favicon.ico" class="bm-favicon"><span>YouTube</span></button>
+            <button class="bookmark-item" data-url="https://github.com"><img src="https://github.com/favicon.ico" class="bm-favicon"><span>GitHub</span></button>
+            <button class="bookmark-item" data-url="https://reddit.com"><img src="https://www.reddit.com/favicon.ico" class="bm-favicon"><span>Reddit</span></button>
+            <button class="bookmark-item" data-url="https://discord.com"><img src="https://discord.com/favicon.ico" class="bm-favicon"><span>Discord</span></button>
+        </div>
+        <div class="chrome-content">
+            <div id="newtab-page" class="content-page active">
+                <div class="newtab-container">
+                    <div class="browser-logo"><span class="logo-text"><span class="logo-s">S</span><span class="logo-w">w</span><span class="logo-a">a</span><span class="logo-f">f</span><span class="logo-t">t</span></span></div>
+                    <div class="google-search-box"><div class="search-inner"><span class="search-icon-google">🔍</span><input type="text" id="google-search" placeholder="Search the web or type a URL" autocomplete="off"></div></div>
+                    <div class="shortcuts-grid">
+                        <button class="shortcut-tile" data-url="https://google.com"><div class="shortcut-icon"><img src="https://www.google.com/favicon.ico"></div><span class="shortcut-name">Google</span></button>
+                        <button class="shortcut-tile" data-url="https://youtube.com"><div class="shortcut-icon youtube-bg"><img src="https://www.youtube.com/favicon.ico"></div><span class="shortcut-name">YouTube</span></button>
+                        <button class="shortcut-tile" data-url="https://github.com"><div class="shortcut-icon github-bg"><img src="https://github.com/favicon.ico"></div><span class="shortcut-name">GitHub</span></button>
+                        <button class="shortcut-tile" data-url="https://reddit.com"><div class="shortcut-icon reddit-bg"><img src="https://www.reddit.com/favicon.ico"></div><span class="shortcut-name">Reddit</span></button>
+                        <button class="shortcut-tile" data-url="https://twitch.tv"><div class="shortcut-icon twitch-bg"><img src="https://www.twitch.tv/favicon.ico"></div><span class="shortcut-name">Twitch</span></button>
+                        <button class="shortcut-tile" data-url="https://discord.com"><div class="shortcut-icon discord-bg"><img src="https://discord.com/favicon.ico"></div><span class="shortcut-name">Discord</span></button>
+                        <button class="shortcut-tile" data-url="https://netflix.com"><div class="shortcut-icon netflix-bg"><img src="https://www.netflix.com/favicon.ico"></div><span class="shortcut-name">Netflix</span></button>
+                        <button class="shortcut-tile add-shortcut" id="add-shortcut"><div class="shortcut-icon plus-icon">+</div><span class="shortcut-name">Add</span></button>
+                    </div>
+                </div>
+            </div>
+            <div id="proxy-page" class="content-page"><iframe id="proxy-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation allow-downloads"></iframe><div class="proxy-loading" id="proxy-loading"><div class="loading-spinner"></div><p>Loading...</p></div></div>
+            <div id="apps-page" class="content-page">
+                <div class="apps-container-chrome">
+                    <div class="apps-header"><h2>Apps & Games</h2><div class="apps-filter"><button class="filter-chip active" data-filter="all">All</button><button class="filter-chip" data-filter="popular">Popular</button><button class="filter-chip" data-filter="games">Games</button><button class="filter-chip" data-filter="tools">Tools</button></div></div>
+                    <div class="apps-grid-chrome" id="apps-grid"></div>
+                </div>
+            </div>
+            <div id="settings-page" class="content-page">
+                <div class="settings-chrome">
+                    <div class="settings-sidebar"><h3>Settings</h3><nav class="settings-nav"><button class="settings-nav-item active" data-section="appearance"><span class="nav-icon">🎨</span>Appearance</button><button class="settings-nav-item" data-section="proxy"><span class="nav-icon">🌐</span>Proxy</button><button class="settings-nav-item" data-section="about"><span class="nav-icon">ℹ️</span>About</button></nav></div>
+                    <div class="settings-content">
+                        <div class="settings-section active" id="appearance-section">
+                            <h4>Appearance</h4>
+                            <div class="setting-card"><label>Theme</label><div class="theme-options"><button class="theme-option active" data-theme="chrome"><div class="theme-preview chrome-preview"></div><span>Chrome</span></button><button class="theme-option" data-theme="dark"><div class="theme-preview dark-preview"></div><span>Dark</span></button><button class="theme-option" data-theme="light"><div class="theme-preview light-preview"></div><span>Light</span></button><button class="theme-option" data-theme="midnight"><div class="theme-preview midnight-preview"></div><span>Midnight</span></button></div></div>
+                            <div class="setting-card"><label>Tab Cloak</label><p class="setting-desc">Disguise this tab as another website</p><div class="cloak-options"><label class="cloak-option"><input type="radio" name="cloak" value="none" checked><span>No cloak</span></label><label class="cloak-option"><input type="radio" name="cloak" value="classroom"><img src="https://ssl.gstatic.com/classroom/favicon.png" class="cloak-icon"><span>Google Classroom</span></label><label class="cloak-option"><input type="radio" name="cloak" value="docs"><img src="https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico" class="cloak-icon"><span>Google Docs</span></label></div></div>
+                        </div>
+                        <div class="settings-section" id="proxy-section">
+                            <h4>Proxy Settings</h4>
+                            <div class="setting-card"><label>Proxy Backend Server</label><input type="text" id="backend-url" placeholder="https://your-proxy-server.com" class="setting-input"><p class="input-help">Enter your proxy server URL</p></div>
+                            <div class="setting-card"><label>Open sites in Chrome clone window</label><label class="toggle-switch"><input type="checkbox" id="chrome-clone-mode"><span class="toggle-slider"></span></label><p class="input-help">Opens websites in a separate window</p></div>
+                        </div>
+                        <div class="settings-section" id="about-section">
+                            <h4>About Swaft Browser</h4>
+                            <div class="about-card"><div class="about-logo">⚡</div><h5>Swaft Browser v1.0</h5><p class="about-desc">A Chrome-inspired web proxy browser for secure and unrestricted browsing.</p><div class="about-links"><a href="https://github.com/random-coder2/swaft-proxy" class="about-link">GitHub</a></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="chrome-clone-window" class="chrome-clone-popup"><div class="clone-header"><div class="clone-tabs"><div class="clone-tab active"><img class="clone-favicon" src=""><span class="clone-title">New Tab</span><span class="clone-close">×</span></div></div><div class="clone-controls"><button class="clone-newtab">+</button><button class="clone-minimize">−</button><button class="clone-maximize">□</button><button class="clone-close-win">×</button></div></div><div class="clone-toolbar"><button class="clone-nav back">←</button><button class="clone-nav forward">→</button><button class="clone-nav refresh">↻</button><div class="clone-omnibox"><span class="clone-secure">🔒</span><input type="text" class="clone-url" readonly></div><button class="clone-menu">⋮</button></div><iframe class="clone-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation allow-downloads"></iframe></div>
+        <div id="toast-container"></div>
+    </div>
+    <script>
+        // Swaft Browser JavaScript
+        const apps=[{name:"GeForce NOW",cat:"popular",icon:"🎮",url:"https://play.geforcenow.com"},{name:"Roblox",cat:"popular",icon:"🧊",url:"https://www.roblox.com"},{name:"Discord",cat:"popular",icon:"💬",url:"https://discord.com"},{name:"YouTube",cat:"popular",icon:"📺",url:"https://youtube.com"},{name:"Twitch",cat:"popular",icon:"📡",url:"https://twitch.tv"},{name:"Reddit",cat:"popular",icon:"🤖",url:"https://reddit.com"},{name:"Netflix",cat:"popular",icon:"🎬",url:"https://netflix.com"},{name:"1v1.LOL",cat:"games",icon:"🔫",url:"https://1v1.lol"},{name:"Krunker",cat:"games",icon:"💀",url:"https://krunker.io"},{name:"Shell Shockers",cat:"games",icon:"🥚",url:"https://shellshock.io"},{name:"Slither.io",cat:"games",icon:"🐍",url:"https://slither.io"},{name:"Agar.io",cat:"games",icon:"🦠",url:"https://agar.io"},{name:"Zombs Royale",cat:"games",icon:"👑",url:"https://zombsroyale.io"},{name:"Minecraft",cat:"games",icon:"⛏️",url:"https://classic.minecraft.net"},{name:"2048",cat:"games",icon:"🔲",url:"https://2048game.com"},{name:"Chess.com",cat:"games",icon:"♟️",url:"https://chess.com"},{name:"CodePen",cat:"tools",icon:"💻",url:"https://codepen.io"},{name:"Replit",cat:"tools",icon:"🔄",url:"https://replit.com"},{name:"GitHub",cat:"tools",icon:"🐙",url:"https://github.com"},{name:"Canva",cat:"tools",icon:"🎨",url:"https://canva.com"},{name:"Figma",cat:"tools",icon:"🖼️",url:"https://figma.com"},{name:"Spotify",cat:"tools",icon:"🎵",url:"https://spotify.com"},{name:"Wikipedia",cat:"tools",icon:"📚",url:"https://wikipedia.org"}];
+        const cloakConfigs={none:{title:"Swaft Browser",icon:""},classroom:{title:"Google Classroom",icon:"https://ssl.gstatic.com/classroom/favicon.png"},docs:{title:"Google Docs",icon:"https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"}};
+        let state={theme:localStorage.getItem("theme")||"chrome",backend:localStorage.getItem("backend")||"",cloak:localStorage.getItem("cloak")||"none",cloneMode:localStorage.getItem("cloneMode")==="true",engine:localStorage.getItem("engine")||"https://www.google.com/search?q="};
+        const el={omnibox:document.getElementById("omnibox-input"),googleSearch:document.getElementById("google-search"),proxyFrame:document.getElementById("proxy-frame"),newtabPage:document.getElementById("newtab-page"),proxyPage:document.getElementById("proxy-page"),appsPage:document.getElementById("apps-page"),settingsPage:document.getElementById("settings-page"),appsGrid:document.getElementById("apps-grid"),cloneWindow:document.getElementById("chrome-clone-window"),cloneFrame:document.querySelector(".clone-frame"),cloneUrl:document.querySelector(".clone-url"),siteIcon:document.getElementById("site-icon")};
+        const utils={toast:(msg,type="info")=>{const t=document.createElement("div");t.className="toast";t.innerHTML=`<span>${type==="success"?"✓":"ℹ️"}</span><span>${msg}</span>`;document.getElementById("toast-container").appendChild(t);setTimeout(()=>{t.style.opacity="0";setTimeout(()=>t.remove(),300)},3000)},loading:show=>{document.getElementById("proxy-loading").style.display=show?"flex":"none"},encode:u=>btoa(u),sanitize:i=>{if(!i)return null;let u=i.trim();if(!u.match(/^https?:\/\//i)){if(u.includes(".")&&!u.includes(" "))u="https://"+u;else return{type:"search",query:u}}return{type:"url",url:u}},updateTitle:t=>{document.title=t;const c=cloakConfigs[state.cloak];if(c&&state.cloak!=="none"){document.title=c.title;let f=document.querySelector('link[rel="icon"]');if(!f){f=document.createElement("link");f.rel="icon";document.head.appendChild(f)}if(c.icon)f.href=c.icon}}};
+        const chromeClone={open:u=>{el.cloneWindow.style.display="flex";let p=state.backend?`${state.backend}/~/${utils.encode(u)}`:u;el.cloneFrame.src=p;el.cloneUrl.value=u;try{const url=new URL(u);document.querySelector(".clone-title").textContent=url.hostname;document.querySelector(".clone-favicon").src=`https://www.google.com/s2/favicons?domain=${url.hostname}&sz=32`}catch{document.querySelector(".clone-title").textContent="New Tab"}utils.toast("Opened in Chrome clone","success")},close:()=>{el.cloneWindow.style.display="none";el.cloneFrame.src=""}};
+        const nav={go:i=>{const r=utils.sanitize(i);if(!r){utils.toast("Enter a valid URL","error");return}let t=r.type==="search"?state.engine+encodeURIComponent(r.query):r.url;if(state.cloneMode){chromeClone.open(t);return}utils.loading(true);el.omnibox.value=t;let p=state.backend?`${state.backend}/~/${utils.encode(t)}`:t;el.proxyFrame.src=p;el.newtabPage.classList.remove("active");el.proxyPage.classList.add("active");el.appsPage.classList.remove("active");el.settingsPage.classList.remove("active");document.querySelectorAll(".chrome-tab").forEach(tab=>tab.classList.remove("active"));const proxyTab=document.querySelector('.chrome-tab[data-tab="proxy"]');if(proxyTab){proxyTab.style.display="flex";proxyTab.classList.add("active");try{proxyTab.querySelector(".tab-title").textContent=new URL(t).hostname}catch{}}el.siteIcon.textContent=state.backend?"🔒":"⚠️";el.proxyFrame.onload=()=>{utils.loading(false);utils.updateTitle(t)};el.proxyFrame.onerror=()=>{utils.loading(false);utils.toast("Failed to load","error")}},home:()=>{el.newtabPage.classList.add("active");el.proxyPage.classList.remove("active");el.appsPage.classList.remove("active");el.settingsPage.classList.remove("active");el.omnibox.value="";document.querySelectorAll(".chrome-tab").forEach(t=>t.classList.remove("active"));document.querySelector('.chrome-tab[data-tab="main"]').classList.add("active");utils.updateTitle("Swaft Browser")}};
+        const appsMgr={render:f=>{const filtered=f==="all"?apps:apps.filter(a=>a.cat===f);el.appsGrid.innerHTML=filtered.map(a=>`<div class="app-card-chrome" data-url="${a.url}"><div class="app-icon-chrome">${a.icon}</div><div class="app-name-chrome">${a.name}</div></div>`).join("";document.querySelectorAll(".app-card-chrome").forEach(c=>c.addEventListener("click",()=>nav.go(c.dataset.url)))}}};
+        const settings={load:()=>{document.body.setAttribute("data-theme",state.theme);document.querySelectorAll(".theme-option").forEach(b=>b.classList.toggle("active",b.dataset.theme===state.theme));document.querySelectorAll('input[name="cloak"]').forEach(r=>r.checked=r.value===state.cloak);const bu=document.getElementById("backend-url");if(bu)bu.value=state.backend;const cm=document.getElementById("chrome-clone-mode");if(cm)cm.checked=state.cloneMode;utils.updateTitle("Swaft Browser")},save:()=>{localStorage.setItem("theme",state.theme);localStorage.setItem("cloak",state.cloak);localStorage.setItem("backend",state.backend);localStorage.setItem("cloneMode",state.cloneMode)}};
+        function init(){el.omnibox.addEventListener("keypress",e=>{if(e.key==="Enter")nav.go(el.omnibox.value)});el.googleSearch.addEventListener("keypress",e=>{if(e.key==="Enter")nav.go(el.googleSearch.value)});document.getElementById("back-btn")?.addEventListener("click",()=>el.proxyFrame.contentWindow?.history?.back());document.getElementById("forward-btn")?.addEventListener("click",()=>el.proxyFrame.contentWindow?.history?.forward());document.getElementById("refresh-btn")?.addEventListener("click",()=>{el.proxyFrame.src=el.proxyFrame.src;utils.loading(true)});document.getElementById("home-btn")?.addEventListener("click",nav.home);document.getElementById("new-tab-btn")?.addEventListener("click",nav.home);document.querySelectorAll(".chrome-tab").forEach(t=>t.addEventListener("click",()=>{const id=t.dataset.tab;if(id==="main")nav.home();else if(id==="proxy"){el.proxyPage.classList.add("active");el.newtabPage.classList.remove("active")}document.querySelectorAll(".chrome-tab").forEach(ct=>ct.classList.remove("active"));t.classList.add("active")}));document.querySelectorAll(".tab-close").forEach(c=>c.addEventListener("click",e=>{e.stopPropagation();const tab=c.closest(".chrome-tab");if(tab.dataset.tab==="proxy"){tab.style.display="none";nav.home()}}));document.querySelectorAll(".shortcut-tile:not(.add-shortcut)").forEach(t=>t.addEventListener("click",()=>nav.go(t.dataset.url)));document.querySelectorAll(".bookmark-item").forEach(b=>b.addEventListener("click",()=>nav.go(b.dataset.url)));document.querySelectorAll(".filter-chip").forEach(c=>c.addEventListener("click",()=>{document.querySelectorAll(".filter-chip").forEach(fc=>fc.classList.remove("active"));c.classList.add("active");appsMgr.render(c.dataset.filter)}));document.getElementById("apps-btn")?.addEventListener("click",()=>{el.newtabPage.classList.remove("active");el.proxyPage.classList.remove("active");el.appsPage.classList.add("active");el.settingsPage.classList.remove("active")});document.getElementById("settings-btn")?.addEventListener("click",()=>{el.newtabPage.classList.remove("active");el.proxyPage.classList.remove("active");el.appsPage.classList.remove("active");el.settingsPage.classList.add("active")});document.querySelectorAll(".settings-nav-item").forEach(i=>i.addEventListener("click",()=>{document.querySelectorAll(".settings-nav-item").forEach(n=>n.classList.remove("active"));i.classList.add("active");document.querySelectorAll(".settings-section").forEach(s=>s.classList.remove("active"));const sec=document.getElementById(i.dataset.section+"-section");if(sec)sec.classList.add("active")}));document.querySelectorAll(".theme-option").forEach(o=>o.addEventListener("click",()=>{document.querySelectorAll(".theme-option").forEach(to=>to.classList.remove("active"));o.classList.add("active");state.theme=o.dataset.theme;document.body.setAttribute("data-theme",state.theme);settings.save()}));document.querySelectorAll('input[name="cloak"]').forEach(r=>r.addEventListener("change",()=>{state.cloak=r.value;utils.updateTitle("");settings.save();utils.toast("Tab cloak updated","success")}));document.getElementById("backend-url")?.addEventListener("change",e=>{state.backend=e.target.value.replace(/\/$/,"");settings.save();utils.toast("Proxy server updated","success")});document.getElementById("chrome-clone-mode")?.addEventListener("change",e=>{state.cloneMode=e.target.checked;settings.save();utils.toast(state.cloneMode?"Chrome clone enabled":"Chrome clone disabled","success")});document.querySelector(".clone-close-win")?.addEventListener("click",chromeClone.close);appsMgr.render("all");settings.load();utils.toast("Welcome to Swaft Browser!","success")}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+    </script>
+</body>
+</html>
