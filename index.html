@@ -1,22 +1,393 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="initial-scale=1, width=device-width">
-  <title>Swaft Proxy</title>
-  <link rel="icon" type="image/svg+xml" href="">
-  <link rel="modulepreload" href="./chunks/vendor-modules.kyFu_h-i.js" crossorigin="">
-  <link rel="stylesheet" href="./assets/B_peBBIS.css" crossorigin="">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SWAFT123456"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-SWAFT123456', { send_page_view: false });
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swaft Browser</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
-<body style="margin: 0; width: 100%; height: 100%; min-height: 100vh; overflow: auto;">
-  <div id="root"></div>
-  <script type="module" crossorigin="" src="./noe_mzpT.js"></script>
+<body data-theme="chrome">
+    <div id="browser">
+        <!-- Chrome-Style Title Bar / Tab Bar -->
+        <div class="chrome-tab-bar">
+            <div class="chrome-tabs">
+                <div class="chrome-tab active" data-tab="main">
+                    <span class="tab-favicon">⚡</span>
+                    <span class="tab-title">Swaft Browser</span>
+                    <span class="tab-close">×</span>
+                </div>
+                <div class="chrome-tab" data-tab="proxy" style="display: none;">
+                    <span class="tab-favicon">🌐</span>
+                    <span class="tab-title">New Tab</span>
+                    <span class="tab-close">×</span>
+                </div>
+            </div>
+            <button class="new-tab-btn" id="new-tab-btn" title="New Tab">+</button>
+            <div class="window-controls">
+                <button class="win-btn minimize">−</button>
+                <button class="win-btn maximize">□</button>
+                <button class="win-btn close">×</button>
+            </div>
+        </div>
+
+        <!-- Chrome-Style Toolbar -->
+        <div class="chrome-toolbar">
+            <div class="nav-buttons">
+                <button class="nav-btn-chrome" id="back-btn" title="Back">←</button>
+                <button class="nav-btn-chrome" id="forward-btn" title="Forward">→</button>
+                <button class="nav-btn-chrome" id="refresh-btn" title="Reload">↻</button>
+                <button class="nav-btn-chrome" id="home-btn" title="Home">⌂</button>
+            </div>
+            
+            <div class="omnibox-container">
+                <div class="omnibox">
+                    <span class="omni-icon" id="site-icon">🔒</span>
+                    <input type="text" id="omnibox-input" placeholder="Search Google or type a URL" autocomplete="off">
+                    <div class="omni-actions">
+                        <button class="omni-btn star" id="bookmark-btn" title="Bookmark">☆</button>
+                        <button class="omni-btn" id="share-btn" title="Share">⎘</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="toolbar-actions">
+                <button class="tool-btn" id="extensions-btn" title="Extensions">🧩</button>
+                <button class="tool-btn" id="profile-btn" title="Profile">
+                    <span class="profile-avatar">👤</span>
+                </button>
+                <button class="tool-btn menu-btn" id="menu-btn" title="Menu">⋮</button>
+            </div>
+        </div>
+
+        <!-- Bookmarks Bar -->
+        <div class="bookmarks-bar">
+            <button class="bookmark-item" data-url="https://google.com">
+                <img src="https://www.google.com/favicon.ico" class="bm-favicon">
+                <span>Google</span>
+            </button>
+            <button class="bookmark-item" data-url="https://youtube.com">
+                <img src="https://www.youtube.com/favicon.ico" class="bm-favicon">
+                <span>YouTube</span>
+            </button>
+            <button class="bookmark-item" data-url="https://github.com">
+                <img src="https://github.com/favicon.ico" class="bm-favicon">
+                <span>GitHub</span>
+            </button>
+            <button class="bookmark-item" data-url="https://reddit.com">
+                <img src="https://www.reddit.com/favicon.ico" class="bm-favicon">
+                <span>Reddit</span>
+            </button>
+            <button class="bookmark-item" data-url="https://discord.com">
+                <img src="https://discord.com/favicon.ico" class="bm-favicon">
+                <span>Discord</span>
+            </button>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="chrome-content">
+            <!-- New Tab Page -->
+            <div id="newtab-page" class="content-page active">
+                <div class="newtab-container">
+                    <!-- Google-Style Logo -->
+                    <div class="browser-logo">
+                        <span class="logo-text">
+                            <span class="logo-s">S</span>
+                            <span class="logo-w">w</span>
+                            <span class="logo-a">a</span>
+                            <span class="logo-f">f</span>
+                            <span class="logo-t">t</span>
+                        </span>
+                    </div>
+
+                    <!-- Search Box -->
+                    <div class="google-search-box">
+                        <div class="search-inner">
+                            <span class="search-icon-google">🔍</span>
+                            <input type="text" id="google-search" placeholder="Search the web or type a URL" autocomplete="off">
+                            <div class="search-actions">
+                                <button class="search-mic" title="Voice search">🎤</button>
+                                <button class="search-lens" title="Google Lens">📷</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search Buttons -->
+                    <div class="search-buttons">
+                        <button class="search-btn" id="google-search-btn">Google Search</button>
+                        <button class="search-btn" id="lucky-btn">I'm Feeling Lucky</button>
+                    </div>
+
+                    <!-- Shortcut Tiles -->
+                    <div class="shortcuts-grid">
+                        <button class="shortcut-tile" data-url="https://google.com">
+                            <div class="shortcut-icon">
+                                <img src="https://www.google.com/favicon.ico" alt="Google">
+                            </div>
+                            <span class="shortcut-name">Google</span>
+                        </button>
+                        <button class="shortcut-tile" data-url="https://youtube.com">
+                            <div class="shortcut-icon youtube-bg">
+                                <img src="https://www.youtube.com/favicon.ico" alt="YouTube">
+                            </div>
+                            <span class="shortcut-name">YouTube</span>
+                        </button>
+                        <button class="shortcut-tile" data-url="https://github.com">
+                            <div class="shortcut-icon github-bg">
+                                <img src="https://github.com/favicon.ico" alt="GitHub">
+                            </div>
+                            <span class="shortcut-name">GitHub</span>
+                        </button>
+                        <button class="shortcut-tile" data-url="https://reddit.com">
+                            <div class="shortcut-icon reddit-bg">
+                                <img src="https://www.reddit.com/favicon.ico" alt="Reddit">
+                            </div>
+                            <span class="shortcut-name">Reddit</span>
+                        </button>
+                        <button class="shortcut-tile" data-url="https://twitch.tv">
+                            <div class="shortcut-icon twitch-bg">
+                                <img src="https://www.twitch.tv/favicon.ico" alt="Twitch">
+                            </div>
+                            <span class="shortcut-name">Twitch</span>
+                        </button>
+                        <button class="shortcut-tile" data-url="https://discord.com">
+                            <div class="shortcut-icon discord-bg">
+                                <img src="https://discord.com/favicon.ico" alt="Discord">
+                            </div>
+                            <span class="shortcut-name">Discord</span>
+                        </button>
+                        <button class="shortcut-tile" data-url="https://netflix.com">
+                            <div class="shortcut-icon netflix-bg">
+                                <img src="https://www.netflix.com/favicon.ico" alt="Netflix">
+                            </div>
+                            <span class="shortcut-name">Netflix</span>
+                        </button>
+                        <button class="shortcut-tile add-shortcut" id="add-shortcut-btn">
+                            <div class="shortcut-icon plus-icon">+</div>
+                            <span class="shortcut-name">Add shortcut</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Proxy Frame Page -->
+            <div id="proxy-page" class="content-page">
+                <iframe id="proxy-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation allow-downloads"></iframe>
+                <div class="proxy-loading" id="proxy-loading">
+                    <div class="loading-spinner-chrome"></div>
+                    <p>Loading...</p>
+                </div>
+            </div>
+
+            <!-- Apps Page -->
+            <div id="apps-page" class="content-page">
+                <div class="apps-container-chrome">
+                    <div class="apps-header">
+                        <h2>Apps & Games</h2>
+                        <div class="apps-filter">
+                            <button class="filter-chip active" data-filter="all">All</button>
+                            <button class="filter-chip" data-filter="popular">Popular</button>
+                            <button class="filter-chip" data-filter="games">Games</button>
+                            <button class="filter-chip" data-filter="tools">Tools</button>
+                        </div>
+                    </div>
+                    <div class="apps-grid-chrome" id="apps-grid"></div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settings-page" class="content-page">
+                <div class="settings-chrome">
+                    <div class="settings-sidebar">
+                        <h3>Settings</h3>
+                        <nav class="settings-nav">
+                            <button class="settings-nav-item active" data-section="appearance">
+                                <span class="nav-icon">🎨</span>
+                                Appearance
+                            </button>
+                            <button class="settings-nav-item" data-section="privacy">
+                                <span class="nav-icon">🔒</span>
+                                Privacy & Security
+                            </button>
+                            <button class="settings-nav-item" data-section="proxy">
+                                <span class="nav-icon">🌐</span>
+                                Proxy Settings
+                            </button>
+                            <button class="settings-nav-item" data-section="advanced">
+                                <span class="nav-icon">⚙️</span>
+                                Advanced
+                            </button>
+                            <button class="settings-nav-item" data-section="about">
+                                <span class="nav-icon">ℹ️</span>
+                                About
+                            </button>
+                        </nav>
+                    </div>
+                    
+                    <div class="settings-content">
+                        <!-- Appearance Section -->
+                        <div class="settings-section active" id="appearance-section">
+                            <h4>Appearance</h4>
+                            <div class="setting-card">
+                                <label>Theme</label>
+                                <div class="theme-options">
+                                    <button class="theme-option active" data-theme="chrome">
+                                        <div class="theme-preview chrome-preview"></div>
+                                        <span>Chrome</span>
+                                    </button>
+                                    <button class="theme-option" data-theme="dark">
+                                        <div class="theme-preview dark-preview"></div>
+                                        <span>Dark</span>
+                                    </button>
+                                    <button class="theme-option" data-theme="light">
+                                        <div class="theme-preview light-preview"></div>
+                                        <span>Light</span>
+                                    </button>
+                                    <button class="theme-option" data-theme="midnight">
+                                        <div class="theme-preview midnight-preview"></div>
+                                        <span>Midnight</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="setting-card">
+                                <label>Show bookmarks bar</label>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="show-bookmarks" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-card">
+                                <label>Tab Cloak</label>
+                                <p class="setting-desc">Disguise this tab as another website</p>
+                                <div class="cloak-options">
+                                    <label class="cloak-option">
+                                        <input type="radio" name="cloak" value="none" checked>
+                                        <span>No cloak</span>
+                                    </label>
+                                    <label class="cloak-option">
+                                        <input type="radio" name="cloak" value="classroom">
+                                        <img src="https://ssl.gstatic.com/classroom/favicon.png" class="cloak-icon">
+                                        <span>Google Classroom</span>
+                                    </label>
+                                    <label class="cloak-option">
+                                        <input type="radio" name="cloak" value="docs">
+                                        <img src="https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico" class="cloak-icon">
+                                        <span>Google Docs</span>
+                                    </label>
+                                    <label class="cloak-option">
+                                        <input type="radio" name="cloak" value="drive">
+                                        <img src="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" class="cloak-icon">
+                                        <span>Google Drive</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Proxy Section -->
+                        <div class="settings-section" id="proxy-section">
+                            <h4>Proxy Settings</h4>
+                            <div class="setting-card">
+                                <label>Proxy Backend Server</label>
+                                <input type="text" id="backend-url" placeholder="https://your-proxy-server.com" class="setting-input">
+                                <p class="input-help">Enter your proxy server URL. Format: https://server.com/~/{encoded_url}</p>
+                            </div>
+                            <div class="setting-card">
+                                <label>Default Search Engine</label>
+                                <select id="default-search" class="setting-select">
+                                    <option value="https://www.google.com/search?q=">Google</option>
+                                    <option value="https://duckduckgo.com/?q=">DuckDuckGo</option>
+                                    <option value="https://www.bing.com/search?q=">Bing</option>
+                                    <option value="https://search.brave.com/search?q=">Brave</option>
+                                </select>
+                            </div>
+                            <div class="setting-card">
+                                <label>Open sites in Chrome clone</label>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="chrome-clone-mode">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <p class="input-help">Opens websites in a separate Chrome-like window in a new tab</p>
+                            </div>
+                        </div>
+
+                        <!-- About Section -->
+                        <div class="settings-section" id="about-section">
+                            <h4>About Swaft Browser</h4>
+                            <div class="about-card">
+                                <div class="about-logo">⚡</div>
+                                <h5>Swaft Browser v1.0</h5>
+                                <p class="about-desc">A Chrome-inspired web proxy browser for secure and unrestricted browsing.</p>
+                                <div class="about-links">
+                                    <a href="#" class="about-link">GitHub</a>
+                                    <a href="#" class="about-link">Report an Issue</a>
+                                    <a href="#" class="about-link">Privacy Policy</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chrome Clone Window (Hidden by default) -->
+        <div id="chrome-clone-window" class="chrome-clone-popup" style="display: none;">
+            <div class="clone-header">
+                <div class="clone-tabs">
+                    <div class="clone-tab active">
+                        <img class="clone-favicon" src="" alt="">
+                        <span class="clone-title">New Tab</span>
+                        <span class="clone-close">×</span>
+                    </div>
+                </div>
+                <div class="clone-controls">
+                    <button class="clone-newtab">+</button>
+                    <button class="clone-minimize">−</button>
+                    <button class="clone-maximize">□</button>
+                    <button class="clone-close-win">×</button>
+                </div>
+            </div>
+            <div class="clone-toolbar">
+                <button class="clone-nav back">←</button>
+                <button class="clone-nav forward">→</button>
+                <button class="clone-nav refresh">↻</button>
+                <div class="clone-omnibox">
+                    <span class="clone-secure">🔒</span>
+                    <input type="text" class="clone-url" readonly>
+                </div>
+                <button class="clone-menu">⋮</button>
+            </div>
+            <iframe class="clone-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation allow-downloads"></iframe>
+        </div>
+
+        <!-- Chrome Menu Dropdown -->
+        <div class="chrome-menu" id="chrome-menu" style="display: none;">
+            <div class="menu-section">
+                <button class="menu-item" id="menu-newtab">New tab <span class="shortcut">Ctrl+T</span></button>
+                <button class="menu-item" id="menu-newwindow">New window <span class="shortcut">Ctrl+N</span></button>
+                <button class="menu-item" id="menu-newincognito">New incognito window <span class="shortcut">Ctrl+Shift+N</span></button>
+            </div>
+            <div class="menu-divider"></div>
+            <div class="menu-section">
+                <button class="menu-item" id="menu-bookmarks">Bookmarks and lists <span class="arrow">›</span></button>
+                <button class="menu-item" id="menu-history">History <span class="shortcut">Ctrl+H</span></button>
+                <button class="menu-item" id="menu-downloads">Downloads <span class="shortcut">Ctrl+J</span></button>
+            </div>
+            <div class="menu-divider"></div>
+            <div class="menu-section">
+                <button class="menu-item" id="menu-apps">Apps</button>
+                <button class="menu-item" id="menu-settings">Settings</button>
+            </div>
+            <div class="menu-divider"></div>
+            <div class="menu-section">
+                <button class="menu-item" id="menu-exit">Exit</button>
+            </div>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div id="toast-container"></div>
+    </div>
+
+    <script src="./app.js"></script>
 </body>
 </html>

@@ -1,0 +1,1347 @@
+/* Swaft Browser - Chrome-Style Aesthetic */
+:root {
+    /* Chrome Default Theme */
+    --chrome-bg: #dee1e6;
+    --chrome-tab-active: #ffffff;
+    --chrome-tab-inactive: #dee1e6;
+    --chrome-toolbar: #ffffff;
+    --chrome-border: #c6c6c6;
+    --chrome-text: #3c4043;
+    --chrome-text-secondary: #5f6368;
+    --chrome-accent: #1a73e8;
+    --chrome-hover: rgba(60, 64, 67, 0.08);
+    --chrome-omnibox-bg: #f1f3f4;
+    --chrome-omnibox-focus: #ffffff;
+    --chrome-blue: #1a73e8;
+    --chrome-red: #ea4335;
+    --chrome-yellow: #fbbc04;
+    --chrome-green: #34a853;
+    
+    /* Dark Theme */
+    --dark-bg: #202124;
+    --dark-toolbar: #35363a;
+    --dark-tab-active: #202124;
+    --dark-tab-inactive: #35363a;
+    --dark-text: #e8eaed;
+    --dark-text-secondary: #9aa0a6;
+    --dark-omnibox-bg: #3c4043;
+    --dark-border: #5f6368;
+    
+    /* Light Theme */
+    --light-bg: #ffffff;
+    --light-toolbar: #ffffff;
+    --light-text: #202124;
+    --light-border: #dadce0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--chrome-bg);
+    color: var(--chrome-text);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Theme Variants */
+body[data-theme="dark"] {
+    --chrome-bg: var(--dark-bg);
+    --chrome-toolbar: var(--dark-toolbar);
+    --chrome-tab-active: var(--dark-tab-active);
+    --chrome-tab-inactive: var(--dark-tab-inactive);
+    --chrome-text: var(--dark-text);
+    --chrome-text-secondary: var(--dark-text-secondary);
+    --chrome-omnibox-bg: var(--dark-omnibox-bg);
+    --chrome-border: var(--dark-border);
+}
+
+body[data-theme="light"] {
+    --chrome-bg: var(--light-bg);
+    --chrome-toolbar: var(--light-toolbar);
+    --chrome-tab-active: #ffffff;
+    --chrome-tab-inactive: #f1f3f4;
+    --chrome-text: var(--light-text);
+    --chrome-border: var(--light-border);
+}
+
+body[data-theme="midnight"] {
+    --chrome-bg: #0f1419;
+    --chrome-toolbar: #161b22;
+    --chrome-tab-active: #0f1419;
+    --chrome-tab-inactive: #21262d;
+    --chrome-text: #c9d1d9;
+    --chrome-text-secondary: #8b949e;
+    --chrome-omnibox-bg: #21262d;
+    --chrome-border: #30363d;
+    --chrome-accent: #58a6ff;
+}
+
+/* Chrome Tab Bar */
+.chrome-tab-bar {
+    display: flex;
+    align-items: flex-end;
+    background: var(--chrome-bg);
+    padding: 8px 8px 0 8px;
+    gap: 4px;
+    border-bottom: 1px solid var(--chrome-border);
+    height: 44px;
+    -webkit-app-region: drag;
+}
+
+.chrome-tabs {
+    display: flex;
+    flex: 1;
+    gap: 4px;
+    -webkit-app-region: no-drag;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.chrome-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.chrome-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--chrome-tab-inactive);
+    border-radius: 8px 8px 0 0;
+    min-width: 140px;
+    max-width: 240px;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+    font-size: 12px;
+    height: 36px;
+    -webkit-app-region: no-drag;
+}
+
+.chrome-tab:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.chrome-tab.active {
+    background: var(--chrome-tab-active);
+    box-shadow: 0 -1px 0 rgba(0,0,0,0.05);
+}
+
+.chrome-tab::before,
+.chrome-tab::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 8px;
+    height: 8px;
+    background: var(--chrome-tab-inactive);
+    border-radius: 50%;
+    opacity: 0;
+}
+
+.chrome-tab.active::before,
+.chrome-tab.active::after {
+    background: var(--chrome-tab-active);
+}
+
+.tab-favicon {
+    font-size: 14px;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tab-title {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tab-close {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 14px;
+    line-height: 1;
+    opacity: 0;
+    transition: all 0.2s;
+}
+
+.chrome-tab:hover .tab-close,
+.chrome-tab.active .tab-close {
+    opacity: 1;
+}
+
+.tab-close:hover {
+    background: rgba(60, 64, 67, 0.2);
+}
+
+.new-tab-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--chrome-text-secondary);
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    -webkit-app-region: no-drag;
+}
+
+.new-tab-btn:hover {
+    background: var(--chrome-hover);
+}
+
+.window-controls {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+    margin-bottom: 8px;
+    -webkit-app-region: no-drag;
+}
+
+.win-btn {
+    width: 32px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--chrome-text-secondary);
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.win-btn:hover {
+    background: var(--chrome-hover);
+}
+
+.win-btn.close:hover {
+    background: #e81123;
+    color: white;
+}
+
+/* Chrome Toolbar */
+.chrome-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: var(--chrome-toolbar);
+    border-bottom: 1px solid var(--chrome-border);
+    height: 44px;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+.nav-btn-chrome {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--chrome-text-secondary);
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.nav-btn-chrome:hover {
+    background: var(--chrome-hover);
+    color: var(--chrome-text);
+}
+
+.omnibox-container {
+    flex: 1;
+    max-width: 720px;
+}
+
+.omnibox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--chrome-omnibox-bg);
+    border-radius: 20px;
+    padding: 8px 16px;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+}
+
+.omnibox:focus-within {
+    background: var(--chrome-omnibox-focus);
+    border-color: var(--chrome-blue);
+    box-shadow: 0 1px 6px rgba(26, 115, 232, 0.2);
+}
+
+.omni-icon {
+    font-size: 14px;
+    color: var(--chrome-green);
+}
+
+#omnibox-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: var(--chrome-text);
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
+}
+
+#omnibox-input::placeholder {
+    color: var(--chrome-text-secondary);
+}
+
+.omni-actions {
+    display: flex;
+    gap: 8px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.omnibox:hover .omni-actions,
+.omnibox:focus-within .omni-actions {
+    opacity: 1;
+}
+
+.omni-btn {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    color: var(--chrome-text-secondary);
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.omni-btn:hover {
+    background: var(--chrome-hover);
+}
+
+.toolbar-actions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.tool-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    color: var(--chrome-text);
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: background 0.2s;
+}
+
+.tool-btn:hover {
+    background: var(--chrome-hover);
+}
+
+.profile-avatar {
+    font-size: 20px;
+}
+
+.menu-btn {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* Bookmarks Bar */
+.bookmarks-bar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    background: var(--chrome-toolbar);
+    border-bottom: 1px solid var(--chrome-border);
+    height: 34px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.bookmarks-bar::-webkit-scrollbar {
+    display: none;
+}
+
+.bookmark-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border: none;
+    background: transparent;
+    color: var(--chrome-text);
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    white-space: nowrap;
+    transition: background 0.2s;
+}
+
+.bookmark-item:hover {
+    background: var(--chrome-hover);
+}
+
+.bm-favicon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Main Content */
+.chrome-content {
+    flex: 1;
+    overflow: auto;
+    background: var(--chrome-tab-active);
+    position: relative;
+}
+
+.content-page {
+    display: none;
+    height: 100%;
+    overflow: auto;
+}
+
+.content-page.active {
+    display: block;
+}
+
+/* New Tab Page */
+.newtab-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 120px;
+    min-height: 100%;
+}
+
+.browser-logo {
+    margin-bottom: 40px;
+}
+
+.logo-text {
+    font-size: 72px;
+    font-weight: 500;
+    font-family: 'Product Sans', 'Segoe UI', sans-serif;
+    letter-spacing: -4px;
+}
+
+.logo-s { color: var(--chrome-blue); }
+.logo-w { color: var(--chrome-red); }
+.logo-a { color: var(--chrome-yellow); }
+.logo-f { color: var(--chrome-blue); }
+.logo-t { color: var(--chrome-green); }
+
+.google-search-box {
+    width: 100%;
+    max-width: 584px;
+    margin-bottom: 30px;
+}
+
+.search-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--chrome-toolbar);
+    border: 1px solid var(--chrome-border);
+    border-radius: 24px;
+    padding: 12px 16px;
+    box-shadow: 0 1px 6px rgba(32, 33, 36, 0.1);
+    transition: all 0.2s;
+}
+
+.search-inner:hover,
+.search-inner:focus-within {
+    box-shadow: 0 2px 8px rgba(32, 33, 36, 0.15);
+    border-color: rgba(0,0,0,0.1);
+}
+
+.search-icon-google {
+    font-size: 16px;
+    color: var(--chrome-text-secondary);
+}
+
+#google-search {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: var(--chrome-text);
+    font-size: 16px;
+    outline: none;
+}
+
+#google-search::placeholder {
+    color: var(--chrome-text-secondary);
+}
+
+.search-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.search-mic,
+.search-lens {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-mic:hover,
+.search-lens:hover {
+    background: var(--chrome-hover);
+}
+
+.search-buttons {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
+.search-btn {
+    padding: 10px 18px;
+    border: 1px solid transparent;
+    background: #f8f9fa;
+    color: #3c4043;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.search-btn:hover {
+    border-color: #dadce0;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+/* Shortcuts Grid */
+.shortcuts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    max-width: 560px;
+    padding: 0 16px;
+}
+
+.shortcut-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 8px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.shortcut-tile:hover {
+    background: var(--chrome-hover);
+}
+
+.shortcut-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #f1f3f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.shortcut-icon img {
+    width: 24px;
+    height: 24px;
+}
+
+.youtube-bg { background: #ff0000; }
+.youtube-bg img { filter: brightness(0) invert(1); }
+
+.github-bg { background: #24292e; }
+.github-bg img { filter: brightness(0) invert(1); }
+
+.reddit-bg { background: #ff4500; }
+
+.twitch-bg { background: #9146ff; }
+
+.discord-bg { background: #5865f2; }
+
+.netflix-bg { background: #e50914; }
+
+.plus-icon {
+    font-size: 24px;
+    color: var(--chrome-text-secondary);
+    font-weight: 300;
+}
+
+.shortcut-name {
+    font-size: 12px;
+    color: var(--chrome-text);
+}
+
+/* Proxy Page */
+#proxy-page {
+    position: relative;
+}
+
+#proxy-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.proxy-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.loading-spinner-chrome {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--chrome-border);
+    border-top-color: var(--chrome-blue);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Apps Page */
+.apps-container-chrome {
+    padding: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.apps-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.apps-header h2 {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.apps-filter {
+    display: flex;
+    gap: 8px;
+}
+
+.filter-chip {
+    padding: 8px 16px;
+    border: 1px solid var(--chrome-border);
+    background: transparent;
+    color: var(--chrome-text);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.filter-chip:hover {
+    background: var(--chrome-hover);
+}
+
+.filter-chip.active {
+    background: var(--chrome-blue);
+    color: white;
+    border-color: var(--chrome-blue);
+}
+
+.apps-grid-chrome {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+}
+
+.app-card-chrome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    background: var(--chrome-toolbar);
+    border: 1px solid var(--chrome-border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.app-card-chrome:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.app-icon-chrome {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--chrome-blue), var(--chrome-green));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+}
+
+.app-name-chrome {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--chrome-text);
+}
+
+/* Settings Page */
+.settings-chrome {
+    display: flex;
+    height: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.settings-sidebar {
+    width: 260px;
+    padding: 24px;
+    border-right: 1px solid var(--chrome-border);
+}
+
+.settings-sidebar h3 {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    padding: 0 12px;
+}
+
+.settings-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.settings-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: none;
+    background: transparent;
+    color: var(--chrome-text);
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    text-align: left;
+    transition: background 0.2s;
+}
+
+.settings-nav-item:hover {
+    background: var(--chrome-hover);
+}
+
+.settings-nav-item.active {
+    background: var(--chrome-hover);
+    font-weight: 500;
+}
+
+.nav-icon {
+    font-size: 18px;
+}
+
+.settings-content {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.settings-section {
+    display: none;
+    max-width: 600px;
+}
+
+.settings-section.active {
+    display: block;
+}
+
+.settings-section h4 {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 24px;
+}
+
+.setting-card {
+    background: var(--chrome-toolbar);
+    border: 1px solid var(--chrome-border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.setting-card label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.setting-desc {
+    font-size: 12px;
+    color: var(--chrome-text-secondary);
+    margin-bottom: 12px;
+}
+
+.theme-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.theme-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border: 2px solid transparent;
+    background: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.theme-option:hover {
+    background: var(--chrome-hover);
+}
+
+.theme-option.active {
+    border-color: var(--chrome-blue);
+}
+
+.theme-preview {
+    width: 56px;
+    height: 40px;
+    border-radius: 4px;
+    border: 1px solid var(--chrome-border);
+}
+
+.chrome-preview {
+    background: linear-gradient(to bottom, #dee1e6 30%, #ffffff 30%);
+}
+
+.dark-preview {
+    background: linear-gradient(to bottom, #202124 30%, #35363a 30%);
+}
+
+.light-preview {
+    background: linear-gradient(to bottom, #ffffff 30%, #f1f3f4 30%);
+}
+
+.midnight-preview {
+    background: linear-gradient(to bottom, #0f1419 30%, #161b22 30%);
+}
+
+.theme-option span {
+    font-size: 12px;
+    color: var(--chrome-text);
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #ccc;
+    border-radius: 24px;
+    transition: 0.2s;
+}
+
+.toggle-slider:before {
+    content: '';
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.2s;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background: var(--chrome-blue);
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(20px);
+}
+
+/* Cloak Options */
+.cloak-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cloak-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.cloak-option:hover {
+    background: var(--chrome-hover);
+}
+
+.cloak-option input[type="radio"] {
+    width: 18px;
+    height: 18px;
+}
+
+.cloak-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Setting Inputs */
+.setting-input,
+.setting-select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--chrome-border);
+    border-radius: 4px;
+    background: var(--chrome-toolbar);
+    color: var(--chrome-text);
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.setting-input:focus,
+.setting-select:focus {
+    outline: none;
+    border-color: var(--chrome-blue);
+}
+
+.input-help {
+    font-size: 12px;
+    color: var(--chrome-text-secondary);
+    margin-top: 6px;
+}
+
+/* About Card */
+.about-card {
+    text-align: center;
+    padding: 40px;
+}
+
+.about-logo {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.about-card h5 {
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.about-desc {
+    color: var(--chrome-text-secondary);
+    margin-bottom: 24px;
+}
+
+.about-links {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
+
+.about-link {
+    color: var(--chrome-blue);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.about-link:hover {
+    text-decoration: underline;
+}
+
+/* Chrome Clone Popup */
+.chrome-clone-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 1200px;
+    height: 80%;
+    background: var(--chrome-bg);
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    z-index: 9999;
+}
+
+.clone-header {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px 0;
+    background: var(--chrome-bg);
+    border-radius: 8px 8px 0 0;
+}
+
+.clone-tabs {
+    display: flex;
+    flex: 1;
+}
+
+.clone-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--chrome-tab-inactive);
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+}
+
+.clone-tab.active {
+    background: var(--chrome-toolbar);
+}
+
+.clone-favicon {
+    width: 16px;
+    height: 16px;
+}
+
+.clone-title {
+    font-size: 12px;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.clone-close {
+    font-size: 16px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.clone-tab:hover .clone-close {
+    opacity: 1;
+}
+
+.clone-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.clone-controls button {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--chrome-text);
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.clone-controls button:hover {
+    background: var(--chrome-hover);
+}
+
+.clone-close-win:hover {
+    background: #e81123 !important;
+    color: white;
+}
+
+.clone-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--chrome-toolbar);
+    border-bottom: 1px solid var(--chrome-border);
+}
+
+.clone-nav {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--chrome-text);
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 14px;
+}
+
+.clone-nav:hover {
+    background: var(--chrome-hover);
+}
+
+.clone-omnibox {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--chrome-omnibox-bg);
+    border-radius: 16px;
+    padding: 6px 12px;
+}
+
+.clone-secure {
+    font-size: 12px;
+}
+
+.clone-url {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: var(--chrome-text);
+    font-size: 13px;
+    outline: none;
+}
+
+.clone-menu {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--chrome-text);
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 16px;
+}
+
+.clone-frame {
+    flex: 1;
+    border: none;
+    border-radius: 0 0 8px 8px;
+    background: white;
+}
+
+/* Chrome Menu Dropdown */
+.chrome-menu {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    width: 280px;
+    background: var(--chrome-toolbar);
+    border: 1px solid var(--chrome-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    z-index: 1000;
+    padding: 8px 0;
+}
+
+.menu-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border: none;
+    background: transparent;
+    color: var(--chrome-text);
+    font-size: 13px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s;
+}
+
+.menu-item:hover {
+    background: var(--chrome-hover);
+}
+
+.menu-item .shortcut {
+    color: var(--chrome-text-secondary);
+    font-size: 12px;
+}
+
+.menu-item .arrow {
+    color: var(--chrome-text-secondary);
+}
+
+.menu-divider {
+    height: 1px;
+    background: var(--chrome-border);
+    margin: 8px 0;
+}
+
+/* Toast Notifications */
+#toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--chrome-toolbar);
+    border: 1px solid var(--chrome-border);
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: slideIn 0.3s ease;
+    font-size: 13px;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Browser App Container */
+#browser {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .chrome-tab-bar {
+        padding: 4px 4px 0;
+    }
+    
+    .chrome-tab {
+        min-width: 100px;
+        max-width: 160px;
+    }
+    
+    .window-controls {
+        display: none;
+    }
+    
+    .chrome-toolbar {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 8px;
+    }
+    
+    .nav-buttons {
+        order: 1;
+    }
+    
+    .omnibox-container {
+        order: 3;
+        width: 100%;
+        max-width: none;
+        margin-top: 8px;
+    }
+    
+    .toolbar-actions {
+        order: 2;
+        margin-left: auto;
+    }
+    
+    .shortcuts-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .settings-chrome {
+        flex-direction: column;
+    }
+    
+    .settings-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--chrome-border);
+    }
+    
+    .theme-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
