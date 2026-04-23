@@ -66,6 +66,11 @@
         .proxy-loading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:none;flex-direction:column;align-items:center;gap:16px}
         .loading-spinner{width:40px;height:40px;border:3px solid var(--chrome-border);border-top-color:var(--chrome-blue);border-radius:50%;animation:spin 1s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
+        .no-proxy-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;padding:40px;background:var(--chrome-toolbar);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);max-width:500px}
+        .no-proxy-msg h3{margin-bottom:16px;color:var(--chrome-text)}
+        .no-proxy-msg p{color:#5f6368;margin-bottom:20px;line-height:1.6}
+        .no-proxy-msg button{padding:12px 24px;background:var(--chrome-blue);color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:14px}
+        .no-proxy-msg button:hover{background:#1557b0}
         .chrome-clone-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:90%;max-width:1200px;height:80%;background:var(--chrome-bg);border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,0.3);display:none;flex-direction:column;z-index:9999}
         .clone-header{display:flex;align-items:center;padding:8px 12px 0;background:var(--chrome-bg);border-radius:8px 8px 0 0}
         .clone-tabs{display:flex;flex:1}
@@ -172,17 +177,24 @@
             <div class="toolbar-actions"><button class="tool-btn" id="apps-btn" title="Apps">🧩</button><button class="tool-btn" id="settings-btn" title="Settings">⚙️</button><button class="tool-btn menu-btn" id="menu-btn" title="Menu">⋮</button></div>
         </div>
         <div class="bookmarks-bar">
-            <button class="bookmark-item" data-url="https://google.com"><img src="https://www.google.com/favicon.ico" class="bm-favicon"><span>Google</span></button>
-            <button class="bookmark-item" data-url="https://youtube.com"><img src="https://www.youtube.com/favicon.ico" class="bm-favicon"><span>YouTube</span></button>
-            <button class="bookmark-item" data-url="https://github.com"><img src="https://github.com/favicon.ico" class="bm-favicon"><span>GitHub</span></button>
-            <button class="bookmark-item" data-url="https://reddit.com"><img src="https://www.reddit.com/favicon.ico" class="bm-favicon"><span>Reddit</span></button>
-            <button class="bookmark-item" data-url="https://discord.com"><img src="https://discord.com/favicon.ico" class="bm-favicon"><span>Discord</span></button>
+            <button class="bookmark-item" data-url="https://google.com" type="button"><img src="https://www.google.com/favicon.ico" class="bm-favicon"><span>Google</span></button>
+            <button class="bookmark-item" data-url="https://youtube.com" type="button"><img src="https://www.youtube.com/favicon.ico" class="bm-favicon"><span>YouTube</span></button>
+            <button class="bookmark-item" data-url="https://github.com" type="button"><img src="https://github.com/favicon.ico" class="bm-favicon"><span>GitHub</span></button>
+            <button class="bookmark-item" data-url="https://reddit.com" type="button"><img src="https://www.reddit.com/favicon.ico" class="bm-favicon"><span>Reddit</span></button>
+            <button class="bookmark-item" data-url="https://discord.com" type="button"><img src="https://discord.com/favicon.ico" class="bm-favicon"><span>Discord</span></button>
         </div>
         <div class="chrome-content">
             <div id="newtab-page" class="content-page active">
                 <div class="newtab-container">
                     <div class="browser-logo"><span class="logo-text"><span class="logo-s">S</span><span class="logo-w">w</span><span class="logo-a">a</span><span class="logo-f">f</span><span class="logo-t">t</span></span></div>
-                    <div class="google-search-box"><div class="search-inner"><span class="search-icon-google">🔍</span><input type="text" id="google-search" placeholder="Search the web or type a URL" autocomplete="off"></div></div>
+                    <div class="google-search-box">
+                        <form id="search-form" onsubmit="return false;">
+                            <div class="search-inner">
+                                <span class="search-icon-google">🔍</span>
+                                <input type="text" id="google-search" placeholder="Search Google or type a URL" autocomplete="off">
+                            </div>
+                        </form>
+                    </div>
                     <div class="shortcuts-grid">
                         <button class="shortcut-tile" data-url="https://google.com" type="button"><div class="shortcut-icon"><img src="https://www.google.com/favicon.ico"></div><span class="shortcut-name">Google</span></button>
                         <button class="shortcut-tile" data-url="https://youtube.com" type="button"><div class="shortcut-icon youtube-bg"><img src="https://www.youtube.com/favicon.ico"></div><span class="shortcut-name">YouTube</span></button>
@@ -195,7 +207,15 @@
                     </div>
                 </div>
             </div>
-            <div id="proxy-page" class="content-page"><iframe id="proxy-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation allow-downloads"></iframe><div class="proxy-loading" id="proxy-loading"><div class="loading-spinner"></div><p>Loading...</p></div></div>
+            <div id="proxy-page" class="content-page">
+                <iframe id="proxy-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation allow-downloads"></iframe>
+                <div class="proxy-loading" id="proxy-loading"><div class="loading-spinner"></div><p>Loading...</p></div>
+                <div class="no-proxy-msg" id="no-proxy-msg" style="display:none">
+                    <h3>⚠️ No Proxy Server Configured</h3>
+                    <p>To browse websites through Swaft Browser, you need to configure a proxy backend server. This allows you to access blocked sites securely.</p>
+                    <button onclick="document.getElementById('settings-btn').click();document.querySelector('[data-section=proxy]').click()">Go to Settings</button>
+                </div>
+            </div>
             <div id="apps-page" class="content-page">
                 <div class="apps-container-chrome">
                     <div class="apps-header"><h2>Apps &amp; Games</h2><div class="apps-filter"><button class="filter-chip active" data-filter="all" type="button">All</button><button class="filter-chip" data-filter="popular" type="button">Popular</button><button class="filter-chip" data-filter="games" type="button">Games</button><button class="filter-chip" data-filter="tools" type="button">Tools</button></div></div>
@@ -213,7 +233,7 @@
                         </div>
                         <div class="settings-section" id="proxy-section">
                             <h4>Proxy Settings</h4>
-                            <div class="setting-card"><label>Proxy Backend Server</label><input type="text" id="backend-url" placeholder="https://your-proxy-server.com" class="setting-input"><p class="input-help">Enter your proxy server URL</p></div>
+                            <div class="setting-card"><label>Proxy Backend Server</label><input type="text" id="backend-url" placeholder="https://your-proxy-server.com" class="setting-input" value="https://api.allorigins.win/raw?url="><p class="input-help">Enter your proxy server URL. Default uses a CORS proxy for basic access.</p></div>
                             <div class="setting-card"><label>Open sites in Chrome clone window</label><label class="toggle-switch"><input type="checkbox" id="chrome-clone-mode"><span class="toggle-slider"></span></label><p class="input-help">Opens websites in a separate window</p></div>
                         </div>
                         <div class="settings-section" id="about-section">
@@ -228,63 +248,65 @@
         <div id="toast-container"></div>
     </div>
     <script>
-        // Swaft Browser - Fixed JavaScript
+        // Swaft Browser - Working Search Version
         const apps=[{name:"GeForce NOW",cat:"popular",icon:"🎮",url:"https://play.geforcenow.com"},{name:"Roblox",cat:"popular",icon:"🧊",url:"https://www.roblox.com"},{name:"Discord",cat:"popular",icon:"💬",url:"https://discord.com"},{name:"YouTube",cat:"popular",icon:"📺",url:"https://youtube.com"},{name:"Twitch",cat:"popular",icon:"📡",url:"https://twitch.tv"},{name:"Reddit",cat:"popular",icon:"🤖",url:"https://reddit.com"},{name:"Netflix",cat:"popular",icon:"🎬",url:"https://netflix.com"},{name:"1v1.LOL",cat:"games",icon:"🔫",url:"https://1v1.lol"},{name:"Krunker",cat:"games",icon:"💀",url:"https://krunker.io"},{name:"Shell Shockers",cat:"games",icon:"🥚",url:"https://shellshock.io"},{name:"Slither.io",cat:"games",icon:"🐍",url:"https://slither.io"},{name:"Agar.io",cat:"games",icon:"🦠",url:"https://agar.io"},{name:"Zombs Royale",cat:"games",icon:"👑",url:"https://zombsroyale.io"},{name:"Minecraft",cat:"games",icon:"⛏️",url:"https://classic.minecraft.net"},{name:"2048",cat:"games",icon:"🔲",url:"https://2048game.com"},{name:"Chess.com",cat:"games",icon:"♟️",url:"https://chess.com"},{name:"CodePen",cat:"tools",icon:"💻",url:"https://codepen.io"},{name:"Replit",cat:"tools",icon:"🔄",url:"https://replit.com"},{name:"GitHub",cat:"tools",icon:"🐙",url:"https://github.com"},{name:"Canva",cat:"tools",icon:"🎨",url:"https://canva.com"},{name:"Figma",cat:"tools",icon:"🖼️",url:"https://figma.com"},{name:"Spotify",cat:"tools",icon:"🎵",url:"https://spotify.com"},{name:"Wikipedia",cat:"tools",icon:"📚",url:"https://wikipedia.org"}];
         const cloakConfigs={none:{title:"Swaft Browser",icon:""},classroom:{title:"Google Classroom",icon:"https://ssl.gstatic.com/classroom/favicon.png"},docs:{title:"Google Docs",icon:"https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"}};
-        let state={theme:localStorage.getItem("theme")||"chrome",backend:localStorage.getItem("backend")||"",cloak:localStorage.getItem("cloak")||"none",cloneMode:localStorage.getItem("cloneMode")==="true",engine:localStorage.getItem("engine")||"https://www.google.com/search?q="};
-        const el={omnibox:document.getElementById("omnibox-input"),googleSearch:document.getElementById("google-search"),proxyFrame:document.getElementById("proxy-frame"),newtabPage:document.getElementById("newtab-page"),proxyPage:document.getElementById("proxy-page"),appsPage:document.getElementById("apps-page"),settingsPage:document.getElementById("settings-page"),appsGrid:document.getElementById("apps-grid"),cloneWindow:document.getElementById("chrome-clone-window"),cloneFrame:document.querySelector(".clone-frame"),cloneUrl:document.querySelector(".clone-url"),siteIcon:document.getElementById("site-icon")};
-        const utils={toast:(msg,type="info")=>{const t=document.createElement("div");t.className="toast";t.innerHTML=`<span>${type==="success"?"✓":"ℹ️"}</span><span>${msg}</span>`;document.getElementById("toast-container").appendChild(t);setTimeout(()=>{t.style.opacity="0";setTimeout(()=>t.remove(),300)},3000)},loading:show=>{document.getElementById("proxy-loading").style.display=show?"flex":"none"},encode:u=>btoa(u),sanitize:i=>{if(!i)return null;let u=i.trim();if(!u.match(/^https?:\/\//i)){if(u.includes(".")&&!u.includes(" "))u="https://"+u;else return{type:"search",query:u}}return{type:"url",url:u}},updateTitle:t=>{document.title=t;const c=cloakConfigs[state.cloak];if(c&&state.cloak!=="none"){document.title=c.title;let f=document.querySelector('link[rel="icon"]');if(!f){f=document.createElement("link");f.rel="icon";document.head.appendChild(f)}if(c.icon)f.href=c.icon}}};
-        const chromeClone={open:u=>{el.cloneWindow.style.display="flex";let p=state.backend?`${state.backend}/~/${utils.encode(u)}`:u;el.cloneFrame.src=p;el.cloneUrl.value=u;try{const url=new URL(u);document.querySelector(".clone-title").textContent=url.hostname;document.querySelector(".clone-favicon").src=`https://www.google.com/s2/favicons?domain=${url.hostname}&sz=32`}catch{document.querySelector(".clone-title").textContent="New Tab"}utils.toast("Opened in Chrome clone","success")},close:()=>{el.cloneWindow.style.display="none";el.cloneFrame.src=""}};
-        const nav={go:i=>{const r=utils.sanitize(i);if(!r){utils.toast("Enter a valid URL","error");return}let t=r.type==="search"?state.engine+encodeURIComponent(r.query):r.url;if(state.cloneMode){chromeClone.open(t);return}utils.loading(true);el.omnibox.value=t;let p=state.backend?`${state.backend}/~/${utils.encode(t)}`:t;el.proxyFrame.src=p;el.newtabPage.classList.remove("active");el.proxyPage.classList.add("active");el.appsPage.classList.remove("active");el.settingsPage.classList.remove("active");document.querySelectorAll(".chrome-tab").forEach(tab=>tab.classList.remove("active"));const proxyTab=document.querySelector('.chrome-tab[data-tab="proxy"]');if(proxyTab){proxyTab.style.display="flex";proxyTab.classList.add("active");try{proxyTab.querySelector(".tab-title").textContent=new URL(t).hostname}catch{}}el.siteIcon.textContent=state.backend?"🔒":"⚠️";el.proxyFrame.onload=()=>{utils.loading(false);utils.updateTitle(t)};el.proxyFrame.onerror=()=>{utils.loading(false);utils.toast("Failed to load","error")}},home:()=>{el.newtabPage.classList.add("active");el.proxyPage.classList.remove("active");el.appsPage.classList.remove("active");el.settingsPage.classList.remove("active");el.omnibox.value="";document.querySelectorAll(".chrome-tab").forEach(t=>t.classList.remove("active"));document.querySelector('.chrome-tab[data-tab="main"]').classList.add("active");utils.updateTitle("Swaft Browser")}};
+        const DEFAULT_PROXY="https://api.allorigins.win/raw?url=";
+        const DEFAULT_ENGINE="https://www.google.com/search?q=";
+        let state={theme:localStorage.getItem("theme")||"chrome",backend:localStorage.getItem("backend")||DEFAULT_PROXY,cloak:localStorage.getItem("cloak")||"none",cloneMode:localStorage.getItem("cloneMode")==="true",engine:localStorage.getItem("engine")||DEFAULT_ENGINE};
+        const el={omnibox:document.getElementById("omnibox-input"),googleSearch:document.getElementById("google-search"),proxyFrame:document.getElementById("proxy-frame"),newtabPage:document.getElementById("newtab-page"),proxyPage:document.getElementById("proxy-page"),appsPage:document.getElementById("apps-page"),settingsPage:document.getElementById("settings-page"),appsGrid:document.getElementById("apps-grid"),cloneWindow:document.getElementById("chrome-clone-window"),cloneFrame:document.querySelector(".clone-frame"),cloneUrl:document.querySelector(".clone-url"),siteIcon:document.getElementById("site-icon"),noProxyMsg:document.getElementById("no-proxy-msg")};
+        const utils={toast:(msg,type="info")=>{const t=document.createElement("div");t.className="toast";t.innerHTML=`<span>${type==="success"?"✓":"ℹ️"}</span><span>${msg}</span>`;document.getElementById("toast-container").appendChild(t);setTimeout(()=>{t.style.opacity="0";setTimeout(()=>t.remove(),300)},3000)},loading:show=>{document.getElementById("proxy-loading").style.display=show?"flex":"none"},sanitize:i=>{if(!i)return null;let u=i.trim();if(!u)return null;if(!u.match(/^https?:\/\//i)){if(u.includes(".")&&!u.includes(" "))u="https://"+u;else return{type:"search",query:u}}return{type:"url",url:u}},updateTitle:t=>{document.title=t;const c=cloakConfigs[state.cloak];if(c&&state.cloak!=="none"){document.title=c.title;let f=document.querySelector('link[rel="icon"]');if(!f){f=document.createElement("link");f.rel="icon";document.head.appendChild(f)}if(c.icon)f.href=c.icon}}};
+        const nav={go:i=>{if(!i||!i.trim()){utils.toast("Please enter a URL or search term","error");return}const r=utils.sanitize(i);if(!r){utils.toast("Invalid input","error");return}let t=r.type==="search"?state.engine+encodeURIComponent(r.query):r.url;if(state.cloneMode){chromeClone.open(t);return}el.omnibox.value=t;showProxyPage();utils.loading(true);el.noProxyMsg.style.display="none";let proxyUrl=state.backend?t:encodeURIComponent(t);if(state.backend){proxyUrl=state.backend+(state.backend.includes("?")?encodeURIComponent(t):t)}el.proxyFrame.src=proxyUrl;el.siteIcon.textContent="🔒";el.proxyFrame.onload=()=>{utils.loading(false);utils.updateTitle(t);try{const u=new URL(t);const pt=document.querySelector('.chrome-tab[data-tab="proxy"]');if(pt)pt.querySelector(".tab-title").textContent=u.hostname}catch{}};el.proxyFrame.onerror=()=>{utils.loading(false);utils.toast("Failed to load page","error")}},home:()=>{el.newtabPage.classList.add("active");el.proxyPage.classList.remove("active");el.appsPage.classList.remove("active");el.settingsPage.classList.remove("active");el.omnibox.value="";document.querySelectorAll(".chrome-tab").forEach(t=>t.classList.remove("active"));const mt=document.querySelector('.chrome-tab[data-tab="main"]');if(mt){mt.classList.add("active")}utils.updateTitle("Swaft Browser")}};
+        function showProxyPage(){el.newtabPage.classList.remove("active");el.proxyPage.classList.add("active");el.appsPage.classList.remove("active");el.settingsPage.classList.remove("active");document.querySelectorAll(".chrome-tab").forEach(t=>t.classList.remove("active"));const pt=document.querySelector('.chrome-tab[data-tab="proxy"]');if(pt){pt.style.display="flex";pt.classList.add("active")}}
+        const chromeClone={open:u=>{el.cloneWindow.style.display="flex";let pu=state.backend?state.backend+u:u;el.cloneFrame.src=pu;el.cloneUrl.value=u;try{const url=new URL(u);document.querySelector(".clone-title").textContent=url.hostname;document.querySelector(".clone-favicon").src=`https://www.google.com/s2/favicons?domain=${url.hostname}&sz=32`}catch{document.querySelector(".clone-title").textContent="New Tab"}utils.toast("Opened in Chrome clone","success")},close:()=>{el.cloneWindow.style.display="none";el.cloneFrame.src=""}};
         const appsMgr={render:f=>{const filtered=f==="all"?apps:apps.filter(a=>a.cat===f);el.appsGrid.innerHTML=filtered.map(a=>`<div class="app-card-chrome" data-url="${a.url}"><div class="app-icon-chrome">${a.icon}</div><div class="app-name-chrome">${a.name}</div></div>`).join("");document.querySelectorAll(".app-card-chrome").forEach(c=>c.addEventListener("click",()=>nav.go(c.dataset.url)))}};
-        const settings={load:()=>{document.body.setAttribute("data-theme",state.theme);document.querySelectorAll(".theme-option").forEach(b=>b.classList.toggle("active",b.dataset.theme===state.theme));document.querySelectorAll('input[name="cloak"]').forEach(r=>r.checked=r.value===state.cloak);const bu=document.getElementById("backend-url");if(bu)bu.value=state.backend;const cm=document.getElementById("chrome-clone-mode");if(cm)cm.checked=state.cloneMode;utils.updateTitle("Swaft Browser")},save:()=>{localStorage.setItem("theme",state.theme);localStorage.setItem("cloak",state.cloak);localStorage.setItem("backend",state.backend);localStorage.setItem("cloneMode",state.cloneMode)}};
+        const settings={load:()=>{document.body.setAttribute("data-theme",state.theme);document.querySelectorAll(".theme-option").forEach(b=>b.classList.toggle("active",b.dataset.theme===state.theme));document.querySelectorAll('input[name="cloak"]').forEach(r=>r.checked=r.value===state.cloak);const bu=document.getElementById("backend-url");if(bu)bu.value=state.backend||DEFAULT_PROXY;const cm=document.getElementById("chrome-clone-mode");if(cm)cm.checked=state.cloneMode;utils.updateTitle("Swaft Browser")},save:()=>{localStorage.setItem("theme",state.theme);localStorage.setItem("cloak",state.cloak);localStorage.setItem("backend",state.backend);localStorage.setItem("cloneMode",state.cloneMode);localStorage.setItem("engine",state.engine)}};
         function init(){
-            // Omnibox - FIXED: Use keydown instead of keypress
-            el.omnibox.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();nav.go(el.omnibox.value)}});
-            // Google search - FIXED: Use keydown instead of keypress  
-            el.googleSearch.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();nav.go(el.googleSearch.value)}});
-            // Navigation buttons
-            document.getElementById("back-btn")?.addEventListener("click",()=>el.proxyFrame.contentWindow?.history?.back());
-            document.getElementById("forward-btn")?.addEventListener("click",()=>el.proxyFrame.contentWindow?.history?.forward());
+            console.log("Swaft Browser initializing...");
+            // Omnibox search
+            el.omnibox.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();console.log("Omnibox search:",this.value);nav.go(this.value)}});
+            // Google search box
+            el.googleSearch.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();console.log("Google search:",this.value);nav.go(this.value)}});
+            // Nav buttons
+            document.getElementById("back-btn")?.addEventListener("click",()=>{try{el.proxyFrame.contentWindow.history.back()}catch{}});
+            document.getElementById("forward-btn")?.addEventListener("click",()=>{try{el.proxyFrame.contentWindow.history.forward()}catch{}});
             document.getElementById("refresh-btn")?.addEventListener("click",()=>{el.proxyFrame.src=el.proxyFrame.src;utils.loading(true)});
             document.getElementById("home-btn")?.addEventListener("click",nav.home);
             document.getElementById("new-tab-btn")?.addEventListener("click",nav.home);
             // Tabs
-            document.querySelectorAll(".chrome-tab").forEach(t=>t.addEventListener("click",()=>{const id=t.dataset.tab;if(id==="main")nav.home();else if(id==="proxy"){el.proxyPage.classList.add("active");el.newtabPage.classList.remove("active")}document.querySelectorAll(".chrome-tab").forEach(ct=>ct.classList.remove("active"));t.classList.add("active")}));
+            document.querySelectorAll(".chrome-tab").forEach(t=>t.addEventListener("click",function(){const id=this.dataset.tab;if(id==="main")nav.home();else if(id==="proxy")showProxyPage();document.querySelectorAll(".chrome-tab").forEach(ct=>ct.classList.remove("active"));this.classList.add("active")}));
             // Tab close
-            document.querySelectorAll(".tab-close").forEach(c=>c.addEventListener("click",e=>{e.stopPropagation();const tab=c.closest(".chrome-tab");if(tab.dataset.tab==="proxy"){tab.style.display="none";nav.home()}}));
-            // Shortcuts - FIXED: Proper event delegation for all shortcut tiles
-            document.querySelectorAll(".shortcut-tile").forEach(tile=>{if(!tile.classList.contains("add-shortcut")){tile.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();const url=tile.dataset.url;if(url)nav.go(url)})}});
-            // Add shortcut button
-            const addBtn=document.getElementById("add-shortcut");
-            if(addBtn){addBtn.addEventListener("click",()=>{const url=prompt("Enter URL:");if(url){nav.go(url)}})}
+            document.querySelectorAll(".tab-close").forEach(c=>c.addEventListener("click",function(e){e.stopPropagation();const tab=this.closest(".chrome-tab");if(tab.dataset.tab==="proxy"){tab.style.display="none";nav.home()}}));
+            // Shortcuts
+            document.querySelectorAll(".shortcut-tile").forEach(tile=>{if(!tile.classList.contains("add-shortcut")){tile.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();const url=this.dataset.url;if(url)nav.go(url)})}});
+            // Add shortcut
+            const addBtn=document.getElementById("add-shortcut");if(addBtn){addBtn.addEventListener("click",()=>{const url=prompt("Enter URL:");if(url)nav.go(url)})}
             // Bookmarks
-            document.querySelectorAll(".bookmark-item").forEach(b=>b.addEventListener("click",e=>{e.preventDefault();nav.go(b.dataset.url)}));
+            document.querySelectorAll(".bookmark-item").forEach(b=>b.addEventListener("click",function(e){e.preventDefault();nav.go(this.dataset.url)}));
             // Apps filter
-            document.querySelectorAll(".filter-chip").forEach(c=>c.addEventListener("click",()=>{document.querySelectorAll(".filter-chip").forEach(fc=>fc.classList.remove("active"));c.classList.add("active");appsMgr.render(c.dataset.filter)}));
+            document.querySelectorAll(".filter-chip").forEach(c=>c.addEventListener("click",function(){document.querySelectorAll(".filter-chip").forEach(fc=>fc.classList.remove("active"));this.classList.add("active");appsMgr.render(this.dataset.filter)}));
             // Apps button
             document.getElementById("apps-btn")?.addEventListener("click",()=>{el.newtabPage.classList.remove("active");el.proxyPage.classList.remove("active");el.appsPage.classList.add("active");el.settingsPage.classList.remove("active")});
             // Settings button
             document.getElementById("settings-btn")?.addEventListener("click",()=>{el.newtabPage.classList.remove("active");el.proxyPage.classList.remove("active");el.appsPage.classList.remove("active");el.settingsPage.classList.add("active")});
             // Settings nav
-            document.querySelectorAll(".settings-nav-item").forEach(i=>i.addEventListener("click",()=>{document.querySelectorAll(".settings-nav-item").forEach(n=>n.classList.remove("active"));i.classList.add("active");document.querySelectorAll(".settings-section").forEach(s=>s.classList.remove("active"));const sec=document.getElementById(i.dataset.section+"-section");if(sec)sec.classList.add("active")}));
+            document.querySelectorAll(".settings-nav-item").forEach(i=>i.addEventListener("click",function(){document.querySelectorAll(".settings-nav-item").forEach(n=>n.classList.remove("active"));this.classList.add("active");document.querySelectorAll(".settings-section").forEach(s=>s.classList.remove("active"));const sec=document.getElementById(this.dataset.section+"-section");if(sec)sec.classList.add("active")}));
             // Theme options
-            document.querySelectorAll(".theme-option").forEach(o=>o.addEventListener("click",()=>{document.querySelectorAll(".theme-option").forEach(to=>to.classList.remove("active"));o.classList.add("active");state.theme=o.dataset.theme;document.body.setAttribute("data-theme",state.theme);settings.save()}));
+            document.querySelectorAll(".theme-option").forEach(o=>o.addEventListener("click",function(){document.querySelectorAll(".theme-option").forEach(to=>to.classList.remove("active"));this.classList.add("active");state.theme=this.dataset.theme;document.body.setAttribute("data-theme",state.theme);settings.save()}));
             // Cloak options
-            document.querySelectorAll('input[name="cloak"]').forEach(r=>r.addEventListener("change",()=>{state.cloak=r.value;utils.updateTitle("");settings.save();utils.toast("Tab cloak updated","success")}));
+            document.querySelectorAll('input[name="cloak"]').forEach(r=>r.addEventListener("change",function(){state.cloak=this.value;utils.updateTitle("");settings.save();utils.toast("Tab cloak updated","success")}));
             // Backend URL
-            document.getElementById("backend-url")?.addEventListener("change",e=>{state.backend=e.target.value.replace(/\/$/,"");settings.save();utils.toast("Proxy server updated","success")});
+            document.getElementById("backend-url")?.addEventListener("change",function(){state.backend=this.value.replace(/\/$/,"");settings.save();utils.toast("Proxy server updated","success")});
             // Chrome clone mode
-            document.getElementById("chrome-clone-mode")?.addEventListener("change",e=>{state.cloneMode=e.target.checked;settings.save();utils.toast(state.cloneMode?"Chrome clone enabled":"Chrome clone disabled","success")});
+            document.getElementById("chrome-clone-mode")?.addEventListener("change",function(){state.cloneMode=this.checked;settings.save();utils.toast(state.cloneMode?"Chrome clone enabled":"Chrome clone disabled","success")});
             // Clone window close
             document.querySelector(".clone-close-win")?.addEventListener("click",chromeClone.close);
             // Initialize
             appsMgr.render("all");
             settings.load();
-            utils.toast("Welcome to Swaft Browser!","success");
-            console.log("Swaft Browser initialized - Discord and Enter key should now work!");
+            console.log("Swaft Browser ready! Proxy:",state.backend);
+            utils.toast("Swaft Browser ready! Try searching...","success");
         }
-        // Run init when DOM is ready
         if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",init)}else{init()}
     </script>
 </body>
