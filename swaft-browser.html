@@ -31,6 +31,8 @@
         .omni-icon{font-size:14px;color:#34a853}
         #omnibox-input{flex:1;border:none;background:transparent;color:var(--chrome-text);font-size:14px;outline:none;font-family:inherit}
         #omnibox-input::placeholder{color:#5f6368}
+        .search-btn{background:var(--chrome-blue);color:#fff;border:none;border-radius:16px;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:500;transition:background 0.2s}
+        .search-btn:hover{background:#1557b0}
         .toolbar-actions{display:flex;gap:4px;margin-left:auto}
         .tool-btn{width:36px;height:36px;border:none;background:transparent;color:var(--chrome-text);cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;transition:background 0.2s}
         .tool-btn:hover{background:var(--chrome-hover)}
@@ -46,12 +48,14 @@
         .browser-logo{margin-bottom:40px}
         .logo-text{font-size:72px;font-weight:500;letter-spacing:-4px;font-family:'Segoe UI',sans-serif}
         .logo-s{color:#4285f4}.logo-w{color:#ea4335}.logo-a{color:#fbbc05}.logo-f{color:#4285f4}.logo-t{color:#34a853}
-        .google-search-box{width:100%;max-width:584px;margin-bottom:30px}
+        .google-search-box{width:100%;max-width:584px;margin-bottom:30px;position:relative}
         .search-inner{display:flex;align-items:center;gap:12px;background:var(--chrome-toolbar);border:1px solid var(--chrome-border);border-radius:24px;padding:12px 16px;box-shadow:0 1px 6px rgba(32,33,36,0.1);transition:all 0.2s}
         .search-inner:hover,.search-inner:focus-within{box-shadow:0 2px 8px rgba(32,33,36,0.15)}
         .search-icon-google{font-size:16px;color:#5f6368}
         #google-search{flex:1;border:none;background:transparent;color:var(--chrome-text);font-size:16px;outline:none}
         #google-search::placeholder{color:#5f6368}
+        .main-search-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:var(--chrome-blue);color:#fff;border:none;border-radius:20px;padding:10px 20px;cursor:pointer;font-size:14px;font-weight:500;transition:all 0.2s}
+        .main-search-btn:hover{background:#1557b0;transform:translateY(-50%) scale(1.02)}
         .shortcuts-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:560px;padding:0 16px}
         .shortcut-tile{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 8px;border:none;background:transparent;cursor:pointer;border-radius:8px;transition:background 0.2s}
         .shortcut-tile:hover{background:var(--chrome-hover)}
@@ -63,14 +67,22 @@
         .shortcut-name{font-size:12px;color:var(--chrome-text)}
         #proxy-page{position:relative}
         #proxy-frame{width:100%;height:100%;border:none;background:#fff}
-        .proxy-loading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:none;flex-direction:column;align-items:center;gap:16px}
+        .proxy-loading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:none;flex-direction:column;align-items:center;gap:16px;background:var(--chrome-toolbar);padding:40px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.15);z-index:100}
         .loading-spinner{width:40px;height:40px;border:3px solid var(--chrome-border);border-top-color:var(--chrome-blue);border-radius:50%;animation:spin 1s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
-        .no-proxy-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;padding:40px;background:var(--chrome-toolbar);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);max-width:500px}
+        .loading-text{color:var(--chrome-text);font-size:14px}
+        .loading-timer{color:#5f6368;font-size:12px;margin-top:-8px}
+        .cancel-btn{background:#ea4335;color:#fff;border:none;border-radius:16px;padding:8px 16px;cursor:pointer;font-size:13px;margin-top:8px;transition:background 0.2s}
+        .cancel-btn:hover{background:#c5221f}
+        .no-proxy-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;padding:40px;background:var(--chrome-toolbar);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);max-width:500px;display:none}
         .no-proxy-msg h3{margin-bottom:16px;color:var(--chrome-text)}
         .no-proxy-msg p{color:#5f6368;margin-bottom:20px;line-height:1.6}
         .no-proxy-msg button{padding:12px 24px;background:var(--chrome-blue);color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:14px}
         .no-proxy-msg button:hover{background:#1557b0}
+        .error-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;padding:40px;background:var(--chrome-toolbar);border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);max-width:500px;display:none}
+        .error-msg h3{margin-bottom:16px;color:#ea4335}
+        .error-msg p{color:#5f6368;margin-bottom:20px;line-height:1.6}
+        .error-msg button{padding:12px 24px;background:var(--chrome-blue);color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:14px}
         .chrome-clone-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:90%;max-width:1200px;height:80%;background:var(--chrome-bg);border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,0.3);display:none;flex-direction:column;z-index:9999}
         .clone-header{display:flex;align-items:center;padding:8px 12px 0;background:var(--chrome-bg);border-radius:8px 8px 0 0}
         .clone-tabs{display:flex;flex:1}
@@ -172,7 +184,11 @@
                 <button class="nav-btn-chrome" id="home-btn" title="Home">⌂</button>
             </div>
             <div class="omnibox-container">
-                <div class="omnibox"><span class="omni-icon" id="site-icon">🔍</span><input type="text" id="omnibox-input" placeholder="Search Google or type a URL" autocomplete="off"></div>
+                <div class="omnibox">
+                    <span class="omni-icon" id="site-icon">🔍</span>
+                    <input type="text" id="omnibox-input" placeholder="Search Google or type a URL" autocomplete="off">
+                    <button class="search-btn" id="omnibox-search-btn">Search</button>
+                </div>
             </div>
             <div class="toolbar-actions"><button class="tool-btn" id="apps-btn" title="Apps">🧩</button><button class="tool-btn" id="settings-btn" title="Settings">⚙️</button><button class="tool-btn menu-btn" id="menu-btn" title="Menu">⋮</button></div>
         </div>
@@ -194,6 +210,7 @@
                                 <input type="text" id="google-search" placeholder="Search Google or type a URL" autocomplete="off">
                             </div>
                         </form>
+                        <button class="main-search-btn" id="main-search-btn" type="button">Google Search</button>
                     </div>
                     <div class="shortcuts-grid">
                         <button class="shortcut-tile" data-url="https://google.com" type="button"><div class="shortcut-icon"><img src="https://www.google.com/favicon.ico"></div><span class="shortcut-name">Google</span></button>
@@ -209,11 +226,26 @@
             </div>
             <div id="proxy-page" class="content-page">
                 <iframe id="proxy-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation allow-downloads"></iframe>
-                <div class="proxy-loading" id="proxy-loading"><div class="loading-spinner"></div><p>Loading...</p></div>
-                <div class="no-proxy-msg" id="no-proxy-msg" style="display:none">
+                <div class="proxy-loading" id="proxy-loading">
+                    <div class="loading-spinner"></div>
+                    <p class="loading-text">Loading...</p>
+                    <p class="loading-timer" id="loading-timer">0s</p>
+                    <button class="cancel-btn" id="cancel-loading">Cancel</button>
+                </div>
+                <div class="no-proxy-msg" id="no-proxy-msg">
                     <h3>⚠️ No Proxy Server Configured</h3>
-                    <p>To browse websites through Swaft Browser, you need to configure a proxy backend server. This allows you to access blocked sites securely.</p>
+                    <p>To browse websites through Swaft Browser, you need to configure a proxy backend server.</p>
                     <button onclick="document.getElementById('settings-btn').click();document.querySelector('[data-section=proxy]').click()">Go to Settings</button>
+                </div>
+                <div class="error-msg" id="error-msg">
+                    <h3>❌ Failed to Load</h3>
+                    <p id="error-text">The page could not be loaded. This might be due to:</p>
+                    <ul style="text-align:left;color:#5f6368;margin-bottom:20px;line-height:1.6">
+                        <li>Invalid URL or site blocked</li>
+                        <li>Proxy server unavailable</li>
+                        <li>Network connectivity issues</li>
+                    </ul>
+                    <button id="error-home-btn">Go Home</button>
                 </div>
             </div>
             <div id="apps-page" class="content-page">
@@ -233,7 +265,7 @@
                         </div>
                         <div class="settings-section" id="proxy-section">
                             <h4>Proxy Settings</h4>
-                            <div class="setting-card"><label>Proxy Backend Server</label><input type="text" id="backend-url" placeholder="https://your-proxy-server.com" class="setting-input" value="https://api.allorigins.win/raw?url="><p class="input-help">Enter your proxy server URL. Default uses a CORS proxy for basic access.</p></div>
+                            <div class="setting-card"><label>Proxy Backend Server</label><input type="text" id="backend-url" placeholder="https://your-proxy-server.com" class="setting-input"><p class="input-help">Enter your proxy server URL. Leave empty to use direct access (limited).</p></div>
                             <div class="setting-card"><label>Open sites in Chrome clone window</label><label class="toggle-switch"><input type="checkbox" id="chrome-clone-mode"><span class="toggle-slider"></span></label><p class="input-help">Opens websites in a separate window</p></div>
                         </div>
                         <div class="settings-section" id="about-section">
@@ -248,29 +280,35 @@
         <div id="toast-container"></div>
     </div>
     <script>
-        // Swaft Browser - Working Search Version
+        // Swaft Browser - Fixed Loading + Search Button Version
         const apps=[{name:"GeForce NOW",cat:"popular",icon:"🎮",url:"https://play.geforcenow.com"},{name:"Roblox",cat:"popular",icon:"🧊",url:"https://www.roblox.com"},{name:"Discord",cat:"popular",icon:"💬",url:"https://discord.com"},{name:"YouTube",cat:"popular",icon:"📺",url:"https://youtube.com"},{name:"Twitch",cat:"popular",icon:"📡",url:"https://twitch.tv"},{name:"Reddit",cat:"popular",icon:"🤖",url:"https://reddit.com"},{name:"Netflix",cat:"popular",icon:"🎬",url:"https://netflix.com"},{name:"1v1.LOL",cat:"games",icon:"🔫",url:"https://1v1.lol"},{name:"Krunker",cat:"games",icon:"💀",url:"https://krunker.io"},{name:"Shell Shockers",cat:"games",icon:"🥚",url:"https://shellshock.io"},{name:"Slither.io",cat:"games",icon:"🐍",url:"https://slither.io"},{name:"Agar.io",cat:"games",icon:"🦠",url:"https://agar.io"},{name:"Zombs Royale",cat:"games",icon:"👑",url:"https://zombsroyale.io"},{name:"Minecraft",cat:"games",icon:"⛏️",url:"https://classic.minecraft.net"},{name:"2048",cat:"games",icon:"🔲",url:"https://2048game.com"},{name:"Chess.com",cat:"games",icon:"♟️",url:"https://chess.com"},{name:"CodePen",cat:"tools",icon:"💻",url:"https://codepen.io"},{name:"Replit",cat:"tools",icon:"🔄",url:"https://replit.com"},{name:"GitHub",cat:"tools",icon:"🐙",url:"https://github.com"},{name:"Canva",cat:"tools",icon:"🎨",url:"https://canva.com"},{name:"Figma",cat:"tools",icon:"🖼️",url:"https://figma.com"},{name:"Spotify",cat:"tools",icon:"🎵",url:"https://spotify.com"},{name:"Wikipedia",cat:"tools",icon:"📚",url:"https://wikipedia.org"}];
         const cloakConfigs={none:{title:"Swaft Browser",icon:""},classroom:{title:"Google Classroom",icon:"https://ssl.gstatic.com/classroom/favicon.png"},docs:{title:"Google Docs",icon:"https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"}};
-        const DEFAULT_PROXY="https://api.allorigins.win/raw?url=";
-        const DEFAULT_ENGINE="https://www.google.com/search?q=";
-        let state={theme:localStorage.getItem("theme")||"chrome",backend:localStorage.getItem("backend")||DEFAULT_PROXY,cloak:localStorage.getItem("cloak")||"none",cloneMode:localStorage.getItem("cloneMode")==="true",engine:localStorage.getItem("engine")||DEFAULT_ENGINE};
-        const el={omnibox:document.getElementById("omnibox-input"),googleSearch:document.getElementById("google-search"),proxyFrame:document.getElementById("proxy-frame"),newtabPage:document.getElementById("newtab-page"),proxyPage:document.getElementById("proxy-page"),appsPage:document.getElementById("apps-page"),settingsPage:document.getElementById("settings-page"),appsGrid:document.getElementById("apps-grid"),cloneWindow:document.getElementById("chrome-clone-window"),cloneFrame:document.querySelector(".clone-frame"),cloneUrl:document.querySelector(".clone-url"),siteIcon:document.getElementById("site-icon"),noProxyMsg:document.getElementById("no-proxy-msg")};
-        const utils={toast:(msg,type="info")=>{const t=document.createElement("div");t.className="toast";t.innerHTML=`<span>${type==="success"?"✓":"ℹ️"}</span><span>${msg}</span>`;document.getElementById("toast-container").appendChild(t);setTimeout(()=>{t.style.opacity="0";setTimeout(()=>t.remove(),300)},3000)},loading:show=>{document.getElementById("proxy-loading").style.display=show?"flex":"none"},sanitize:i=>{if(!i)return null;let u=i.trim();if(!u)return null;if(!u.match(/^https?:\/\//i)){if(u.includes(".")&&!u.includes(" "))u="https://"+u;else return{type:"search",query:u}}return{type:"url",url:u}},updateTitle:t=>{document.title=t;const c=cloakConfigs[state.cloak];if(c&&state.cloak!=="none"){document.title=c.title;let f=document.querySelector('link[rel="icon"]');if(!f){f=document.createElement("link");f.rel="icon";document.head.appendChild(f)}if(c.icon)f.href=c.icon}}};
-        const nav={go:i=>{if(!i||!i.trim()){utils.toast("Please enter a URL or search term","error");return}const r=utils.sanitize(i);if(!r){utils.toast("Invalid input","error");return}let t=r.type==="search"?state.engine+encodeURIComponent(r.query):r.url;if(state.cloneMode){chromeClone.open(t);return}el.omnibox.value=t;showProxyPage();utils.loading(true);el.noProxyMsg.style.display="none";let proxyUrl=state.backend?t:encodeURIComponent(t);if(state.backend){proxyUrl=state.backend+(state.backend.includes("?")?encodeURIComponent(t):t)}el.proxyFrame.src=proxyUrl;el.siteIcon.textContent="🔒";el.proxyFrame.onload=()=>{utils.loading(false);utils.updateTitle(t);try{const u=new URL(t);const pt=document.querySelector('.chrome-tab[data-tab="proxy"]');if(pt)pt.querySelector(".tab-title").textContent=u.hostname}catch{}};el.proxyFrame.onerror=()=>{utils.loading(false);utils.toast("Failed to load page","error")}},home:()=>{el.newtabPage.classList.add("active");el.proxyPage.classList.remove("active");el.appsPage.classList.remove("active");el.settingsPage.classList.remove("active");el.omnibox.value="";document.querySelectorAll(".chrome-tab").forEach(t=>t.classList.remove("active"));const mt=document.querySelector('.chrome-tab[data-tab="main"]');if(mt){mt.classList.add("active")}utils.updateTitle("Swaft Browser")}};
-        function showProxyPage(){el.newtabPage.classList.remove("active");el.proxyPage.classList.add("active");el.appsPage.classList.remove("active");el.settingsPage.classList.remove("active");document.querySelectorAll(".chrome-tab").forEach(t=>t.classList.remove("active"));const pt=document.querySelector('.chrome-tab[data-tab="proxy"]');if(pt){pt.style.display="flex";pt.classList.add("active")}}
+        let state={theme:localStorage.getItem("theme")||"chrome",backend:localStorage.getItem("backend")||"",cloak:localStorage.getItem("cloak")||"none",cloneMode:localStorage.getItem("cloneMode")==="true",engine:localStorage.getItem("engine")||"https://www.google.com/search?q="};
+        let loadingTimer=null,loadingStart=0;
+        const el={omnibox:document.getElementById("omnibox-input"),googleSearch:document.getElementById("google-search"),proxyFrame:document.getElementById("proxy-frame"),newtabPage:document.getElementById("newtab-page"),proxyPage:document.getElementById("proxy-page"),appsPage:document.getElementById("apps-page"),settingsPage:document.getElementById("settings-page"),appsGrid:document.getElementById("apps-grid"),cloneWindow:document.getElementById("chrome-clone-window"),cloneFrame:document.querySelector(".clone-frame"),cloneUrl:document.querySelector(".clone-url"),siteIcon:document.getElementById("site-icon"),noProxyMsg:document.getElementById("no-proxy-msg"),loadingDiv:document.getElementById("proxy-loading"),errorMsg:document.getElementById("error-msg"),errorText:document.getElementById("error-text"),loadingTimer:document.getElementById("loading-timer")};
+        const utils={toast:(msg,type="info")=>{const t=document.createElement("div");t.className="toast";t.innerHTML=`<span>${type==="success"?"✓":"ℹ️"}</span><span>${msg}</span>`;document.getElementById("toast-container").appendChild(t);setTimeout(()=>{t.style.opacity="0";setTimeout(()=>t.remove(),300)},3000)},startLoading:()=>{el.loadingDiv.style.display="flex";el.noProxyMsg.style.display="none";el.errorMsg.style.display="none";loadingStart=Date.now();loadingTimer=setInterval(()=>{const s=Math.floor((Date.now()-loadingStart)/1000);if(el.loadingTimer)el.loadingTimer.textContent=`${s}s`;if(s>30){utils.stopLoading();utils.showError("Loading timed out after 30 seconds. The proxy server may be slow or unavailable.")}},1000)},stopLoading:()=>{el.loadingDiv.style.display="none";if(loadingTimer){clearInterval(loadingTimer);loadingTimer=null}},showError:(text)=>{el.errorMsg.style.display="block";if(text)el.errorText.textContent=text;utils.stopLoading()},sanitize:i=>{if(!i)return null;let u=i.trim();if(!u)return null;if(!u.match(/^https?:\/\//i)){if(u.includes(".")&&!u.includes(" "))u="https://"+u;else return{type:"search",query:u}}return{type:"url",url:u}},updateTitle:t=>{document.title=t;const c=cloakConfigs[state.cloak];if(c&&state.cloak!=="none"){document.title=c.title;let f=document.querySelector('link[rel="icon"]');if(!f){f=document.createElement("link");f.rel="icon";document.head.appendChild(f)}if(c.icon)f.href=c.icon}}};
         const chromeClone={open:u=>{el.cloneWindow.style.display="flex";let pu=state.backend?state.backend+u:u;el.cloneFrame.src=pu;el.cloneUrl.value=u;try{const url=new URL(u);document.querySelector(".clone-title").textContent=url.hostname;document.querySelector(".clone-favicon").src=`https://www.google.com/s2/favicons?domain=${url.hostname}&sz=32`}catch{document.querySelector(".clone-title").textContent="New Tab"}utils.toast("Opened in Chrome clone","success")},close:()=>{el.cloneWindow.style.display="none";el.cloneFrame.src=""}};
+        const nav={go:i=>{if(!i||!i.trim()){utils.toast("Please enter a URL or search term","error");return}const r=utils.sanitize(i);if(!r){utils.toast("Invalid input","error");return}let t=r.type==="search"?state.engine+encodeURIComponent(r.query):r.url;if(state.cloneMode){chromeClone.open(t);return}showProxyPage();utils.startLoading();el.omnibox.value=t;let pu=state.backend?state.backend+t:t;el.proxyFrame.src=pu;el.siteIcon.textContent=state.backend?"🔒":"⚠️";const loadTimeout=setTimeout(()=>{utils.stopLoading();utils.showError("Page load timeout. The site may be blocking iframes or the proxy is unavailable.")},30000);el.proxyFrame.onload=()=>{clearTimeout(loadTimeout);utils.stopLoading();utils.updateTitle(t);try{const pt=document.querySelector('.chrome-tab[data-tab="proxy"]');if(pt)pt.querySelector(".tab-title").textContent=new URL(t).hostname}catch{}};el.proxyFrame.onerror=()=>{clearTimeout(loadTimeout);utils.stopLoading();utils.showError("Failed to load the page. Check your proxy settings or try a different URL.")}},home:()=>{utils.stopLoading();el.newtabPage.classList.add("active");el.proxyPage.classList.remove("active");el.appsPage.classList.remove("active");el.settingsPage.classList.remove("active");el.errorMsg.style.display="none";el.noProxyMsg.style.display="none";el.omnibox.value="";document.querySelectorAll(".chrome-tab").forEach(t=>t.classList.remove("active"));const mt=document.querySelector('.chrome-tab[data-tab="main"]');if(mt)mt.classList.add("active");utils.updateTitle("Swaft Browser")}};
+        function showProxyPage(){el.newtabPage.classList.remove("active");el.proxyPage.classList.add("active");el.appsPage.classList.remove("active");el.settingsPage.classList.remove("active");document.querySelectorAll(".chrome-tab").forEach(t=>t.classList.remove("active"));const pt=document.querySelector('.chrome-tab[data-tab="proxy"]');if(pt){pt.style.display="flex";pt.classList.add("active")}}
         const appsMgr={render:f=>{const filtered=f==="all"?apps:apps.filter(a=>a.cat===f);el.appsGrid.innerHTML=filtered.map(a=>`<div class="app-card-chrome" data-url="${a.url}"><div class="app-icon-chrome">${a.icon}</div><div class="app-name-chrome">${a.name}</div></div>`).join("");document.querySelectorAll(".app-card-chrome").forEach(c=>c.addEventListener("click",()=>nav.go(c.dataset.url)))}};
-        const settings={load:()=>{document.body.setAttribute("data-theme",state.theme);document.querySelectorAll(".theme-option").forEach(b=>b.classList.toggle("active",b.dataset.theme===state.theme));document.querySelectorAll('input[name="cloak"]').forEach(r=>r.checked=r.value===state.cloak);const bu=document.getElementById("backend-url");if(bu)bu.value=state.backend||DEFAULT_PROXY;const cm=document.getElementById("chrome-clone-mode");if(cm)cm.checked=state.cloneMode;utils.updateTitle("Swaft Browser")},save:()=>{localStorage.setItem("theme",state.theme);localStorage.setItem("cloak",state.cloak);localStorage.setItem("backend",state.backend);localStorage.setItem("cloneMode",state.cloneMode);localStorage.setItem("engine",state.engine)}};
+        const settings={load:()=>{document.body.setAttribute("data-theme",state.theme);document.querySelectorAll(".theme-option").forEach(b=>b.classList.toggle("active",b.dataset.theme===state.theme));document.querySelectorAll('input[name="cloak"]').forEach(r=>r.checked=r.value===state.cloak);const bu=document.getElementById("backend-url");if(bu)bu.value=state.backend;const cm=document.getElementById("chrome-clone-mode");if(cm)cm.checked=state.cloneMode;utils.updateTitle("Swaft Browser")},save:()=>{localStorage.setItem("theme",state.theme);localStorage.setItem("cloak",state.cloak);localStorage.setItem("backend",state.backend);localStorage.setItem("cloneMode",state.cloneMode);localStorage.setItem("engine",state.engine)}};
         function init(){
-            console.log("Swaft Browser initializing...");
-            // Omnibox search
-            el.omnibox.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();console.log("Omnibox search:",this.value);nav.go(this.value)}});
-            // Google search box
-            el.googleSearch.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();console.log("Google search:",this.value);nav.go(this.value)}});
+            // Omnibox search with button
+            const doOmniboxSearch=()=>{const v=el.omnibox.value.trim();if(v){console.log("Omnibox search:",v);nav.go(v)}};
+            el.omnibox.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();doOmniboxSearch()}});
+            document.getElementById("omnibox-search-btn")?.addEventListener("click",doOmniboxSearch);
+            // Main search with button
+            const doMainSearch=()=>{const v=el.googleSearch.value.trim();if(v){console.log("Main search:",v);nav.go(v)}};
+            el.googleSearch.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();doMainSearch()}});
+            document.getElementById("main-search-btn")?.addEventListener("click",doMainSearch);
+            // Cancel loading
+            document.getElementById("cancel-loading")?.addEventListener("click",()=>{utils.stopLoading();el.proxyFrame.src="";utils.toast("Loading cancelled","info")});
+            // Error home button
+            document.getElementById("error-home-btn")?.addEventListener("click",nav.home);
             // Nav buttons
             document.getElementById("back-btn")?.addEventListener("click",()=>{try{el.proxyFrame.contentWindow.history.back()}catch{}});
             document.getElementById("forward-btn")?.addEventListener("click",()=>{try{el.proxyFrame.contentWindow.history.forward()}catch{}});
-            document.getElementById("refresh-btn")?.addEventListener("click",()=>{el.proxyFrame.src=el.proxyFrame.src;utils.loading(true)});
+            document.getElementById("refresh-btn")?.addEventListener("click",()=>{el.proxyFrame.src=el.proxyFrame.src;utils.startLoading()});
             document.getElementById("home-btn")?.addEventListener("click",nav.home);
             document.getElementById("new-tab-btn")?.addEventListener("click",nav.home);
             // Tabs
@@ -304,8 +342,8 @@
             // Initialize
             appsMgr.render("all");
             settings.load();
-            console.log("Swaft Browser ready! Proxy:",state.backend);
-            utils.toast("Swaft Browser ready! Try searching...","success");
+            console.log("Swaft Browser ready!");
+            utils.toast("Swaft Browser ready! Use the search buttons or press Enter","success");
         }
         if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",init)}else{init()}
     </script>
